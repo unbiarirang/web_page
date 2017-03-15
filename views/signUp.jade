@@ -1,4 +1,60 @@
-html
+extends layout
+
+block content
+	script(src='/javascripts/jquery.min.js')
+	script.
+		$(function() {
+			$('.btnCreate').on('click', function (e) {	
+				var user_id = $('#user_id').val();
+				var user_name = $('#user_name').val();
+				var user_pw = $('#user_pw').val();
+				var user_pw_confirm = $('#user_pw_confirm').val();
+
+				if (!validate(user_id, user_name, user_pw, user_pw_confirm)) return;
+				$.ajax({
+					url: '/signUp',
+					type: 'POST',
+					data: {
+						'user_id': user_id,
+						'user_name': user_name,
+						'user_pw': user_pw
+					},
+					success: function(resultData) {
+						window.location.herf = '#close';
+						if (resultData != 1) {
+							
+						}
+						console.log('success');
+					}
+				});
+			});
+		});
+
+		function validate(id, name, pw, pw_confirm) {
+			if (!id) {
+				alert('아이디를 입력해 주세요');
+				return false;
+			}
+
+			if (!name) {
+				alert('이름을 입력해 주세요');
+				return false;
+			}
+
+			if (!pw) {
+				alert('비밀번호를 입력해 주세요');
+				return false;
+			}
+
+			if (pw != pw_confirm) {
+				alert('비밀번호가 올바르지 않습니다');
+				return false;
+			}
+
+			return true;
+		}
+
+
 	head
 		title Sample Sign Up Page
 		link(rel='stylesheet', href='/stylesheets/style.css')
@@ -7,20 +63,26 @@ html
 		div#info Sign Up
 		table
 			tr
-				td Email
+				td Id
 				td
-					input#email(type='email', size='20')
+					input#user_id(type='text' size='20')
+			tr
+				td Name
+				td
+					input#user_name(type='text' size='20')
 			tr
 				td Password
 				td
-					input#password(type='password', size='20')
+					input#user_pw(type='password' size='20')
 			tr
 				td Verify Password
 				td
-					input#verifyPassword(type='password', size='20')
-			tr
-				td(colspan='2')
-					button#signup-button Sign Up
-			tr
-				td.center(colspan='2')
-					a(href='index.html') Back
+					input#user_pw_confirm(type='password' size='20')
+		div
+			input.btnCreate(type='button' value='Sign Up')
+			//- tr
+			//- 	td.center(colspan='2')
+			//- 		input.btnCreate(type='button' value='Sign Up')
+			//- tr
+			//- 	td.center(colspan='2')
+			//- 		a(href='/') Back

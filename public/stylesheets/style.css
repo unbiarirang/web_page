@@ -37,6 +37,10 @@ button {
 	width: 100%;
 }
 
+div {
+	text-align: center;
+}
+
 .center {
 	text-align: center;
 }
