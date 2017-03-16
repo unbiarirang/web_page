@@ -1,9 +1,13 @@
 "use strict"
 
 function init(app) { 
-    app.get('/', function(req, res) {
+    app.get('/', function (req, res) {
         res.render('index');
     });
+
+    app.get('/home', function (req, res) {
+        res.render('home');
+    })
 
     require('./auth/login').init(app);
     require('./auth/signUp').init(app);
