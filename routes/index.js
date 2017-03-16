@@ -1,4 +1,5 @@
 "use strict"
+let path = require('path');
 
 function init(app) { 
     app.get('/', function (req, res) {
@@ -10,8 +11,7 @@ function init(app) {
     });
 
     app.get('/chat', function (req, res) {
-        console.log(__dirname + '/../public/chat.html');
-        res.sendFile(__dirname + '/../public/chat.html');
+        res.sendFile(path.join(__dirname, '..', 'public/chat.html'));
     });
 
     require('./auth/login').init(app);
