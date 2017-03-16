@@ -10,7 +10,7 @@ function init(app) {
     })
 
     app.get('/chat', function (req, res) {
-        res.sendFile(__dirname + '/index.html');
+        res.render('chat/chat');
     })
 
     require('./auth/login').init(app);
