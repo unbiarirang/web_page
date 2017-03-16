@@ -61,3 +61,8 @@ div {
 	padding: 1em;
 	margin: 2em auto;
 }
+
+#error {
+	text-align: center;
+	color: red;
+}

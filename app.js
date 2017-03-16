@@ -21,9 +21,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-require('./database/redis')(app);
+//require('./database/redis')(app);
 
-require('./routes/login').init(app);
+require('./routes/index').init(app);
 app.get('/users', users);
 
 // catch 404 and forward to error handler

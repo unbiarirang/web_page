@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+	head
+		title Sample Login Page
+		link(rel='stylesheet', href='/stylesheets/style.css')
+	body
+		h1 Sample Login Page
+		div#info Login
+		if error
+			div#error #{error}
+			br
+		table
+			form(method='POST' action='/login')
+				tr
+					td Id
+					td
+						input#input_id(type='text', name='input_id', size='20')
+				tr
+					td Password
+					td
+						input#input_pw(type='password', name='input_pw', size='20')
+				tr
+					td(colspan='2')
+						button#btnLogin(type='submit') Login
+				tr
+					td.center(colspan='2')
+						a(href='/') Back

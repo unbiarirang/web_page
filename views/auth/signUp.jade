@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block content
 	script(src='/javascripts/jquery.min.js')
@@ -78,11 +78,10 @@ block content
 				td Verify Password
 				td
 					input#user_pw_confirm(type='password' size='20')
-		div
-			input.btnCreate(type='button' value='Sign Up')
-			//- tr
-			//- 	td.center(colspan='2')
-			//- 		input.btnCreate(type='button' value='Sign Up')
-			//- tr
-			//- 	td.center(colspan='2')
-			//- 		a(href='/') Back
+					
+			tr
+				td.center(colspan='2')
+					input.btnCreate(type='button' value='Sign Up')
+			tr
+				td.center(colspan='2')
+					a(href='/') Back
