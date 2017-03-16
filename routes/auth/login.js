@@ -21,7 +21,7 @@ function init(app) {
             }
 
             console.log('로그인 성공임');
-            res.redirect('/');
+            res.redirect('/home');
         });
     });
 }
