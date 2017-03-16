@@ -24,9 +24,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-require('./database/redis')(app);
+//require('./database/redis')(app);
 require('./routes/index').init(app);
-require('./routes/chat').init(app);
 
 app.get('/users', users);
 
@@ -60,6 +59,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;

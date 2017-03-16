@@ -5,13 +5,14 @@ function init(app) {
         res.render('index');
     });
 
-    app.get('/home', function (req, res) {
+    app.get('/home',  function (req, res) {
         res.render('home');
-    })
+    });
 
     app.get('/chat', function (req, res) {
-        res.render('chat/chat');
-    })
+        console.log(__dirname + '/../public/chat.html');
+        res.sendFile(__dirname + '/../public/chat.html');
+    });
 
     require('./auth/login').init(app);
     require('./auth/signUp').init(app);

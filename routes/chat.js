@@ -1,7 +1,6 @@
 "use strict"
 
-function init (app) {
-    let http = require('http').Server(app);
+function init (http) {
     let io = require('socket.io')(http);
 
     io.on('connection', function(socket) {
