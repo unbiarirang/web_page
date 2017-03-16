@@ -13,7 +13,8 @@ function init(app) {
         req.cache.hget('user', input_id, (err, result) => {
             if (err) throw err;
 
-            user_pw = result[input_id];
+            console.log('reids hget result:', result);
+            user_pw = result;
 
             if (input_pw != user_pw) {
                 return res.render('auth/login', { error: 'Wrong password!' });
