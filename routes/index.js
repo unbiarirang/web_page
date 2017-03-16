@@ -9,6 +9,10 @@ function init(app) {
         res.render('home');
     })
 
+    app.get('/chat', function (req, res) {
+        res.sendFile(__dirname + '/index.html');
+    })
+
     require('./auth/login').init(app);
     require('./auth/signUp').init(app);
     require('./auth/changePw').init(app);
