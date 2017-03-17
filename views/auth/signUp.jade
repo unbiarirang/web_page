@@ -21,7 +21,7 @@ block content
 					},
 					success: function(resultData) {
 						if (resultData.result == 0) 
-							return alert('아이디가 중복됩니다. 가입이 실패했습니다.');
+							return alert('같은 아이디가 이미 존재합니다. 가입이 실패했습니다.');
 						if (resultData.result != 1)
 							return alert('뭔지 모를 에러. 가입이 실패했습니다.');
 
