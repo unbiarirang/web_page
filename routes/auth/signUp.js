@@ -10,15 +10,12 @@ function init(app) {
         let user_name = req.body.user_name;
         let user_pw = req.body.user_pw;
 
-        res.redirect('/');
-        //res.send({'result': 1});
+        req.cache.hset('user', user_id, user_pw, (err, result) => {
+            if (err) throw err;
 
-        // req.cache.hset('user', user_id, user_pw, (err, result) => {
-        //     if (err) throw err;
-
-        //     console.log('회원 가입 성공');
-        //     res.render('index', { resultData: 1 });
-        // });
+            console.log('회원 가입 성공');
+            res.send({result: 1});
+        });
     });
 }
 exports.init = init;
