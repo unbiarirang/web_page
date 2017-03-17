@@ -6,9 +6,6 @@ function init(app) {
     });
 
     app.post('/addInfo', (req, res) => {
-        let key = req.body.input_key;
-        let value = req.body.input_value;
-
         addInfo(req, res, (err) => {
             if (err) throw err;
 
@@ -19,6 +16,8 @@ function init(app) {
 exports.init = init;
 
 function addInfo (req, res, callback) {
+    let key = req.body.input_key;
+    let value = req.body.input_value;
     let redis = req.cache;
     
     redis.hset('info', key, value, (err) => {
