@@ -6,8 +6,8 @@ function init(app) {
         res.render('index');
     });
 
-    app.get('/home',  function (req, res) {
-        res.render('home');
+    app.get('/menu',  function (req, res) {
+        res.render('menu');
     });
 
     app.get('/chat', function (req, res) {
@@ -18,5 +18,7 @@ function init(app) {
     require('./auth/signUp').init(app);
     require('./auth/changePw').init(app);
     require('./auth/findPw').init(app);
+
+    require('./addInfo').init(app);
 }
 exports.init = init;

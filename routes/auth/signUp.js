@@ -13,8 +13,8 @@ function init(app) {
         req.cache.hset('user', user_id, user_pw, (err, result) => {
             if (err) throw err;
 
-            console.log('레디스 저장 성공', result);
-            res.send({'resultData': 1});
+            console.log('회원 가입 성공');
+            res.render('index', { resultData: 1 });
         });
     });
 }

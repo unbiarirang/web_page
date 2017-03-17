@@ -1,5 +1,8 @@
 "use strict"
 
+const
+    async = require('async');
+
 function init(app) {
     app.get('/login', function (req, res) {
         res.render('auth/login');
@@ -10,18 +13,32 @@ function init(app) {
         let input_pw = req.body.input_pw;
         let user_pw;
 
-        req.cache.hget('user', input_id, (err, result) => {
-            if (err) throw err;
+        async.waterfall([
+            (callback) => {
+                req.cache.hexists('user', input_id, (err, result) => {
+                    if (err) callback (err);
 
-            console.log('reids hget result:', result);
-            user_pw = result;
+                    if (result != 1)
+                        return res.render('auth/login', { error: 'Wrong Id!' });
 
-            if (input_pw != user_pw) {
-                return res.render('auth/login', { error: 'Wrong password!' });
+                    callback();
+                })
+            },
+            (callback) => {
+                req.cache.hget('user', input_id, (err, result) => {
+                    if (err) callback(err);
+
+                    user_pw = result;
+
+                    if (input_pw != user_pw)
+                        return res.render('auth/login', { error: 'Wrong password!' });
+
+                    callback();
+                });
             }
-
-            console.log('로그인 성공임');
-            res.redirect('/home');
+        ], (err, result) => {
+            console.log('로그인 성공');
+            res.redirect('/menu');
         });
     });
 }
