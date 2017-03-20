@@ -10,7 +10,7 @@ style.
     #messages li:nth-child(odd) { background: #eee; }
 
 ul#messages
-form(action='')
+form(action='', value=user_name)
     input#m(autocomplete='off')
     button Send
 
@@ -19,7 +19,7 @@ script(src='http://code.jquery.com/jquery-1.11.1.js')
 script.
     $(function() {
         var socket = io();
-        var user_name = user_name;
+        var user_name = $('form').val();
 
         console.log('user_name', user_name);
 
