@@ -14,7 +14,7 @@ function init(app) {
         // res.sendFile(path.join(__dirname, '..', 'public/chat.html'));
         //res.redirect('/chat/user/' + req.session.userData.name);
         let user_name = req.session.userData.user_name;
-        res.render('chat', {'user_name': user_name});
+        res.render('chat', {user_name: user_name});
     });
 
     app.get('/chat/user', function (req, res) {
