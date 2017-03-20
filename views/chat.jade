@@ -28,12 +28,12 @@ script.
                 type: 'GET',
                 success: function(resultData) {
                     console.log('resultData', resultData);
-                    name = resultData.user_name;
+                    return resultData.user_name;
                 }
             });
 
-            console.log('name', name);
-            return name;
+            //- console.log('name', name);
+            //- return name;
         }());
 
         $('form').submit(function(){
