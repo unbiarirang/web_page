@@ -12,7 +12,7 @@ function init(app) {
 
     app.get('/chat', function (req, res) {
         // res.sendFile(path.join(__dirname, '..', 'public/chat.html'));
-        console.log('req.userData', req.userData);
+        console.log('req.session.userData', req.session.userData);
         res.render('chat');
     });
 
