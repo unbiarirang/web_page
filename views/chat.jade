@@ -21,21 +21,7 @@ script.
         var socket = io();
         var name= '';
 
-        socket.emit('adduser', function (name) {
-            console.log('adduser');
-            $.ajax({
-                url: '/chat/user',
-                type: 'GET',
-                success: function(resultData) {
-                    console.log('resultData', resultData);
-                    name = resultData.user_name
-                    return name;
-                }
-            });
-
-            console.log('name', name);
-            return name;
-        }());
+        socket.emit('adduser', getUserName());
 
         $('form').submit(function(){
             socket.emit('chat', $('#m').val());
@@ -47,3 +33,18 @@ script.
             $('#messages').append($('<li>').text(msg));
         });
     });
+
+    function getUserName() {
+        console.log('getUserName');
+        var name;
+        $.ajax({
+            url: '/chat/user',
+            type: 'GET',
+            success: function(resultData) {
+                console.log('resultData', resultData);
+                name = resultData.user_name
+            }
+        });
+        console.log('name plz', name);
+        return name;
+    }
