@@ -33,7 +33,7 @@ script.
             });
 
             return name;
-        });
+        }());
 
         $('form').submit(function(){
             socket.emit('chat', $('#m').val());
