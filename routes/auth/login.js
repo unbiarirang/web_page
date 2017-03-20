@@ -49,7 +49,7 @@ function init(app) {
             }
         ], (err, result) => {
             console.log('로그인 성공');
-            req.session.userData = {
+            req.userData = {
                 'user_id': user_id,
                 'user_name': user_name
             };
