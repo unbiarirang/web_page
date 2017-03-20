@@ -12,8 +12,12 @@ function init(app) {
 
     app.get('/chat', function (req, res) {
         // res.sendFile(path.join(__dirname, '..', 'public/chat.html'));
-        console.log('req.session.userData', req.session.userData);
-        res.render('chat');
+        res.redirect('/chat/user/' + req.session.userData.name);
+    });
+
+    app.get('/chat/user', function (req, res) {
+        let user_name = req.session.userData.name;
+        res.send({'user_name': user_name});
     });
 
     require('./auth/login').init(app);
