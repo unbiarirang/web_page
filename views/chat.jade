@@ -22,6 +22,7 @@ script.
         var name;
 
         socket.emit('adduser', function() {
+            console.log('adduser');
             $.ajax({
                 url: '/chat/user',
                 type: 'GET',
