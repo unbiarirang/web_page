@@ -7,6 +7,7 @@ const
   logger = require('morgan'),
   cookieParser = require('cookie-parser'),
   bodyParser = require('body-parser'),
+  session = require('express-session'),
 
   users = require('./routes/users'),
 
@@ -23,6 +24,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: 'ebchoi',
+  resave: false,
+  saveUninitialized: true
+}));
 
 require('./database/redis')(app);
 require('./routes/index').init(app);

@@ -11,8 +11,7 @@ function init(app) {
     app.post('/login', function (req, res) {
         let input_id = req.body.input_id;
         let input_pw = req.body.input_pw;
-        let user_id = input_id;
-        let user_pw;
+        
         let user_name;
 
         async.waterfall([
@@ -30,16 +29,14 @@ function init(app) {
                 req.cache.hget('user', input_id, (err, result) => { // 비밀번호 확인
                     if (err) callback(err);
 
-                    user_pw = result;
-
-                    if (input_pw != user_pw)
+                    if (input_pw != result)
                         return res.render('auth/login', { error: 'Wrong password!' });
 
                     callback();
                 });
             },
             (callback) => {
-                req.cache.hget('id::' + user_id, 'name', (err, result) => { // 해당 유저 정보 읽기
+                req.cache.hget('id::' + input_id, 'name', (err, result) => { // 해당 유저 정보 읽기
                     if (err) callback(err);
 
                     user_name = result;
@@ -49,10 +46,11 @@ function init(app) {
             }
         ], (err, result) => {
             console.log('로그인 성공');
-            req.userData = {
-                'user_id': user_id,
+
+            req.session.userData = {
+                'user_id': input_id,
                 'user_name': user_name
-            };
+            }
             res.redirect('/menu');
         });
     });
