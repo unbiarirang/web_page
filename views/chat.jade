@@ -19,9 +19,9 @@ script(src='http://code.jquery.com/jquery-1.11.1.js')
 script.
     $(function() {
         var socket = io();
-        var name;
 
         socket.emit('adduser', function() {
+            var name;
             console.log('adduser');
             $.ajax({
                 url: '/chat/user',
