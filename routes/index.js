@@ -12,7 +12,8 @@ function init(app) {
 
     app.get('/chat', function (req, res) {
         // res.sendFile(path.join(__dirname, '..', 'public/chat.html'));
-        res.redirect('/chat/user/' + req.session.userData.name);
+        //res.redirect('/chat/user/' + req.session.userData.name);
+        res.render('chat');
     });
 
     app.get('/chat/user', function (req, res) {
