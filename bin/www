@@ -15,7 +15,6 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
 
 /**
  * Create HTTP server.

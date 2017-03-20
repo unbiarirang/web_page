@@ -14,12 +14,17 @@ function init(app) {
         let user_pw = req.body.user_pw;
     
         req.cache.hset('user', user_id, user_pw, (err, result) => {
-                if (err) throw err;
-                if (result == 0) 
-                    return res.send({result: 0});
+            if (err) throw err;
+            if (result == 0) 
+                return res.send({result: 0});
 
-                console.log('회원 가입 성공');
+            req.cache.hset('id::' + user_id, 'name', user_name, (err, result) => {
+                if (err) throw err;
+                if (result == 0)
+                    return res.send({result: -1});
+
                 return res.send({result: 1});
+            });
         });
     });
 }
