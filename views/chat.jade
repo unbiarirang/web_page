@@ -21,8 +21,6 @@ script.
         var socket = io();
         var user_name = $('#name').attr('value');
 
-        console.log('user_name', user_name);
-
         socket.emit('adduser', user_name);
 
         $('form').submit(function(){
@@ -35,18 +33,3 @@ script.
             $('#messages').append($('<li>').text(msg));
         });
     });
-
-    function getUserName() {
-        console.log('getUserName');
-        var name;
-        $.ajax({
-            url: '/chat/user',
-            type: 'GET',
-            success: function(resultData) {
-                console.log('resultData', resultData);
-                name = resultData.user_name
-            }
-        });
-        console.log('name plz', name);
-        return name;
-    }

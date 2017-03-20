@@ -17,12 +17,6 @@ function init(app) {
         res.render('chat', {user_name: user_name});
     });
 
-    app.get('/chat/user', function (req, res) {
-        let user_name = req.session.userData.user_name;
-        console.log('user_name', user_name);
-        res.send({'user_name': user_name});
-    });
-
     require('./auth/login').init(app);
     require('./auth/signUp').init(app);
     require('./auth/changePw').init(app);
