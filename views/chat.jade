@@ -19,21 +19,22 @@ script(src='http://code.jquery.com/jquery-1.11.1.js')
 script.
     $(function() {
         var socket = io();
+        var name= '';
 
-        socket.emit('adduser', function() {
-            var name;
+        socket.emit('adduser', function (name) {
             console.log('adduser');
             $.ajax({
                 url: '/chat/user',
                 type: 'GET',
                 success: function(resultData) {
                     console.log('resultData', resultData);
-                    return resultData.user_name;
+                    name = resultData.user_name
+                    return name;
                 }
             });
 
-            //- console.log('name', name);
-            //- return name;
+            console.log('name', name);
+            return name;
         }());
 
         $('form').submit(function(){
