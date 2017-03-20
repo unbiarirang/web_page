@@ -48,8 +48,8 @@ function init(app) {
             console.log('로그인 성공');
 
             req.session.userData = {
-                'id': input_id,
-                'name': user_name
+                'user_id': input_id,
+                'user_name': user_name
             }
             res.redirect('/menu');
         });
