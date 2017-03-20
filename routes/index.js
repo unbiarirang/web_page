@@ -17,6 +17,7 @@ function init(app) {
 
     app.get('/chat/user', function (req, res) {
         let user_name = req.session.userData.name;
+        console.log('user_name', user_name);
         res.send({'user_name': user_name});
     });
 

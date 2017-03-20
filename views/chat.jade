@@ -26,6 +26,7 @@ script.
                 url: '/chat/user',
                 type: 'GET',
                 success: function(resultData) {
+                    console.log('resultData', resultData);
                     name = resultData.user_name;
                 }
             });
