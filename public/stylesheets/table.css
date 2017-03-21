@@ -1,0 +1,26 @@
+table {
+    table-layout: fixed;
+    overflow: scroll;
+    border-collapse: collapse;
+    width: 60%;
+}
+
+
+th {
+    padding-left: 4px;
+    padding-right: 4px;
+    border-bottom: 1px solid navy;
+}
+
+
+td {
+    word-wrap: break-word;
+    white-space: normal;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-bottom: 1px solid navy;
+}
+
+body {
+    user-select: text;
+}

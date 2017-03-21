@@ -2,7 +2,7 @@ const
     redis = require('redis');
 
 module.exports = (app) => {
-	global.client = redis.createClient(6379, '127.0.0.1');
+	global.client = redis.createClient(6379, '13.124.86.195');
 
 	client.on('connect', () => {
 		console.log("Redis is connected");

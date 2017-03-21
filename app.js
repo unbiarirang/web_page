@@ -9,8 +9,6 @@ const
   bodyParser = require('body-parser'),
   session = require('express-session'),
 
-  users = require('./routes/users'),
-
   app = express();
 
 // view engine setup
@@ -33,8 +31,6 @@ app.use(session({
 
 require('./database/redis')(app);
 require('./routes/index').init(app);
-
-app.get('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

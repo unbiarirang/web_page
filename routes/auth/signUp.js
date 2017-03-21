@@ -16,14 +16,14 @@ function init(app) {
         req.cache.hset('user', user_id, user_pw, (err, result) => {
             if (err) throw err;
             if (result == 0) 
-                return res.send({result: 0});
+                return res.send({'result': 0});
 
             req.cache.hset('id::' + user_id, 'name', user_name, (err, result) => {
                 if (err) throw err;
                 if (result == 0)
-                    return res.send({result: -1});
+                    return res.send({'result': -1});
 
-                return res.send({result: 1});
+                return res.send({'result': 1});
             });
         });
     });

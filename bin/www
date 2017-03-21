@@ -20,7 +20,7 @@ var http = require('http').Server(app);
  * Create HTTP server.
  */
 
-require('../routes/chat').init(http);
+require('../routes/chat/socket').init(http);
 
 // var server = http.createServer(app);
 

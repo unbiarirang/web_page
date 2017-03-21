@@ -8,20 +8,28 @@ style.
     #messages { list-style-type: none; margin: 0; padding: 0; }
     #messages li { padding: 5px 10px; }
     #messages li:nth-child(odd) { background: #eee; }
+    #back {top: 0; text-align: right}
 
+a#back(href='/chat') 나가기
 ul#messages
-form#name(action='', value='#{user_name}')
+form#name
     input#m(autocomplete='off')
     button Send
 
 script(src='/socket.io/socket.io.js')
 script(src='http://code.jquery.com/jquery-1.11.1.js')
 script.
+    var room_name = !{room_name != null? JSON.stringify(room_name): 'null'};
+    var user_name = !{user_name != null? JSON.stringify(user_name): 'null'};
+
     $(function() {
         var socket = io();
-        var user_name = $('#name').attr('value');
+        var data = {};
 
-        socket.emit('adduser', user_name);
+        data.room_name = room_name;
+        data.user_name = user_name;
+
+        socket.emit('adduser', data);
 
         $('form').submit(function(){
             socket.emit('chat', $('#m').val());

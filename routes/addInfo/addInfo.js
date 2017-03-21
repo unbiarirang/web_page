@@ -2,7 +2,7 @@
 
 function init(app) {
     app.get('/addInfo', (req, res) => {
-        res.render('addInfo');
+        res.render('addInfo/addInfo');
     });
 
     app.post('/addInfo', (req, res) => {

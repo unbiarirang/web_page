@@ -10,12 +10,6 @@ function init(app) {
         res.render('menu');
     });
 
-    app.get('/chat', function (req, res) {
-        let user_name = req.session.userData.user_name;
-
-        res.render('chat', {user_name: user_name});
-    });
-
     app.get('/profile',  function (req, res) {
         res.sendFile(path.join(__dirname, '..', 'public/profile.html'));
     });
@@ -25,6 +19,8 @@ function init(app) {
     require('./auth/changePw').init(app);
     require('./auth/findPw').init(app);
 
-    require('./addInfo').init(app);
+	require('./chat/chat').init(app);
+
+    require('./addInfo/addInfo').init(app);
 }
 exports.init = init;
