@@ -3,21 +3,16 @@ extends ../layout
 block content
 	link(rel='stylesheet', href='/stylesheets/table.css')
 	script(src='/javascripts/jquery.min.js')
-	script.
-		var rooms = !{rooms != null? JSON.stringify(rooms): 'null'};
-
-		$(function(){
-		});
 		
 	h1 welcome
 	ul
 		li
-			a(href='/chat/' + '#{user_name}') 새로운 채팅방
+			a(href='/chat/' + '0') 새로운 채팅방 만들기
 		li
 			a 기존 채팅방
 		table
 			tr
-				th(size='20') 채팅방
+				th(size='20') 채팅방 ID
 				th(size='20') 참여자 리스트
 			each val, key in rooms
 				tr

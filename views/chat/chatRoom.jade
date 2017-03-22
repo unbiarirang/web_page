@@ -19,14 +19,14 @@ form#name
 script(src='/socket.io/socket.io.js')
 script(src='http://code.jquery.com/jquery-1.11.1.js')
 script.
-    var room_name = !{room_name != null? JSON.stringify(room_name): 'null'};
+    var room_id = !{room_id != null? JSON.stringify(room_id): 'null'};
     var user_name = !{user_name != null? JSON.stringify(user_name): 'null'};
 
     $(function() {
         var socket = io();
         var data = {};
 
-        data.room_name = room_name;
+        data.room_id = room_id;
         data.user_name = user_name;
 
         socket.emit('adduser', data);

@@ -1,18 +1,26 @@
 "use strict"
 const
-	rooms = require('./socket').rooms;
+	rooms = require('./socket').rooms,
+	lib = require('../../lib/lib');
 
-function init (app) {
-    app.get('/chat', function (req, res) {
+function init(app) {
+	app.get('/chat', function (req, res) {
 		let sendData = {};
 		sendData.user_name = req.session.userData.user_name;
 		sendData.rooms = rooms;
-        res.render('chat/chat', sendData);
-    });
+		res.render('chat/chat', sendData);
+	});
 
-	app.get('/chat/:room_name', function (req, res) {
+	app.get('/chat/:room_id', function (req, res) {
 		let sendData = {};
-		sendData.room_name = req.params.room_name;
+		let room_id = req.params.room_id;
+
+		if (room_id == 0) {
+			room_id = lib.getRoomId();
+			return res.redirect('/chat/' + room_id);
+		}
+
+		sendData.room_id = room_id;
 		sendData.user_name = req.session.userData.user_name;
 
 		res.render('chat/chatRoom', sendData);
