@@ -10,7 +10,7 @@ style.
     #messages li:nth-child(odd) { background: #eee; }
     #back {top: 0; text-align: right}
 
-a#back(href='/chat') 나가기
+input#back(type='button', value='back', action = '/')
 ul#messages
 form#name
     input#m(autocomplete='off')
@@ -36,6 +36,10 @@ script.
             $('#m').val('');
             return false;
         });
+
+        $('#back').on('click', () => {
+            window.location.href = '/chat';
+        })
 
         socket.on('chat', function (msg) {
             $('#messages').append($('<li>').text(msg));

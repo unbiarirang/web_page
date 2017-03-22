@@ -1,10 +1,17 @@
 "use strict"
 
 const
-    async = require('async');
+    async = require('async'),
+    lib = require('../../lib/lib');
+
+let sessionMap = {};
 
 function init(app) {
+    let prev_path;
+
     app.get('/login', function (req, res) {
+        prev_path = req.query.prev_path;
+
         res.render('auth/login');
     });
 
@@ -45,14 +52,27 @@ function init(app) {
                 });
             }
         ], (err, result) => {
-            console.log('로그인 성공');
+            if (sessionMap.hasOwnProperty(input_id))
+                delete sessionMap[input_id];
+
+            let session_key = lib.getRandomNum();
+            sessionMap[input_id] = session_key;
+            
+            console.log('session_key : ' , session_key);
+            console.log('sessionMap : ', sessionMap);
 
             req.session.userData = {
                 'user_id': input_id,
-                'user_name': user_name
+                'user_name': user_name,
+                'session_key': session_key
             }
-            res.redirect('/menu');
+
+            if (prev_path == '' || prev_path == 'undefined' || prev_path == null)
+                res.redirect('/menu');
+            else
+                res.redirect(prev_path);
         });
     });
 }
 exports.init = init;
+exports.sessionMap = sessionMap;
