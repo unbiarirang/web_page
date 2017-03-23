@@ -3,9 +3,9 @@ const
 	config = require('../../config/config'); //config 나중에 수정
 
 module.exports = (app) => {
-	global.client = redis.createClient(6379, '13.124.86.195');
+	global.client = redis.createClient(config.redis.port, config.redis.host);
 
-	client.auth(config.redisPw);
+	client.auth(config.redis.passwd);
 
 	client.on('connect', () => {
 		console.log("Redis is connected");

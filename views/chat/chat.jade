@@ -5,7 +5,7 @@ block content
 	script(src='/javascripts/jquery.min.js')
 	script.
 		$(function() {
-			if (!window.location.hash) {
+			if (!window.location.hash) { //요건 이 페이지 진입하면 바로 새로고침 한번
 				window.location = window.location + '#loaded';
 				window.location.reload();
 			}
