@@ -4,7 +4,7 @@ const
     async = require('async'),
     lib = require('../../lib/lib');
 
-let sessionMap = {};
+let sessionMap = lib.getSessionMap();
 
 function init(app) {
     let prev_path;
@@ -43,7 +43,7 @@ function init(app) {
                 });
             },
             (callback) => {
-                req.cache.hget('id::' + input_id, 'name', (err, result) => { // 해당 유저 정보 읽기
+                req.cache.hget('ID::' + input_id, 'name', (err, result) => { // 해당 유저 정보 읽기
                     if (err) callback(err);
 
                     user_name = result;
@@ -58,7 +58,6 @@ function init(app) {
             let session_key = lib.getRandomNum();
             sessionMap[input_id] = session_key;
             
-            console.log('session_key : ' , session_key);
             console.log('sessionMap : ', sessionMap);
 
             req.session.userData = {

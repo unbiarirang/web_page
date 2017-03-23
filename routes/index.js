@@ -1,7 +1,8 @@
 "use strict"
 
 const
-    path = require('path');
+    path = require('path'),
+    lib = require('../lib/lib');
 
 function init(app) {
     app.get('/', function (req, res) {
@@ -9,16 +10,19 @@ function init(app) {
     });
 
     app.get('/menu', function (req, res) {
-        res.render('menu');
+        lib.checkLogin(req, res, () => {
+            res.render('menu');
+        });
     });
 
     app.get('/profile', function (req, res) {
-        res.sendFile(path.join(__dirname, '..', 'public/profile.html'));
+        lib.checkLogin(req, res, () => {
+            res.sendFile(path.join(__dirname, '..', 'public/profile.html'));
+        });
     });
 
     require('./auth/login').init(app);
     require('./auth/signUp').init(app);
-    require('./auth/changePw').init(app);
     require('./auth/findPw').init(app);
 
     require('./chat/chat').init(app);

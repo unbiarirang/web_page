@@ -1,16 +1,23 @@
 "use strict"
 
+const
+    lib = require('../../lib/lib');
+
 function init(app) {
     app.get('/addInfo', (req, res) => {
-        res.render('addInfo/addInfo');
+        lib.checkLogin(req, res, () => {
+            res.render('addInfo/addInfo');
+        });
     });
 
     app.post('/addInfo', (req, res) => {
-        addInfo(req, res, (err) => {
-            if (err) throw err;
+        lib.checkLogin(req, res, () => {
+            addInfo(req, res, (err) => {
+                if (err) throw err;
 
-            return res.render('addInfo', { success: 'Add Information Succeeded!' });
-        })
+                return res.render('addInfo', { success: 'Add Information Succeeded!' });
+            });
+        });
     });
 }
 exports.init = init;

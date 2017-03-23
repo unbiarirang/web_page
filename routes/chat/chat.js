@@ -1,14 +1,16 @@
 "use strict"
 const
-	rooms = require('./socket').rooms,
 	lib = require('../../lib/lib');
 
-function init(app) {
+let rooms = require('./socket').rooms;
+
+function init (app) {
 	app.get('/chat', function (req, res) {
 		lib.checkLogin(req, res, () => {
 			let sendData = {};
 			sendData.user_name = req.session.userData.user_name;
 			sendData.rooms = rooms;
+			console.log('내정보 : ', req.session.userData);
 			res.render('chat/chat', sendData);
 		});
 	});

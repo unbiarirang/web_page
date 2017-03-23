@@ -9,7 +9,10 @@ block content
 				window.location = window.location + '#loaded';
 				window.location.reload();
 			}
+
+			window.setTimeout('location.reload()', 10000); //채팅방 리스트 페이지는 10초마다 갱신 
 		});
+		
 	h1 welcome
 	ul
 		li
