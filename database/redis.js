@@ -19,13 +19,13 @@ module.exports = (app) => {
 		console.log('Redis error encountered : ', err);
 	});
 
-	client.monitor((err, res) => {
-		if (err) {
-			console.err(err);
-		} else {
-		console.info(res);
-		}
-	});
+	// client.monitor((err, res) => {
+	// 	if (err) {
+	// 		console.err(err);
+	// 	} else {
+	// 	console.info(res);
+	// 	}
+	// });
 
 	client.on('monitor', (time, args, raw_reply) => {
 		console.log(time + ': ' + args + ' | ' + raw_reply);

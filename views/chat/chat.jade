@@ -19,6 +19,7 @@ block content
 			a(href='/chat/' + 'new') 새로운 채팅방 만들기
 		li
 			a 기존 채팅방
+
 		table
 			tr
 				th(size='20') 채팅방 ID
@@ -28,3 +29,6 @@ block content
 					td
 						a(href='/chat/' + '#{key}') #{key} 
 					td #{rooms[key].userlist}
+		br
+		div
+			a.center(href='/menu') Back

@@ -11,21 +11,18 @@ function init(app) {
     app.post('/signUp', function(req, res) {
         let user_id = req.body.user_id;
         let user_name = req.body.user_name;
-        let user_email = req.body.email;
+        let user_email = req.body.user_email;
         let user_pw = req.body.user_pw;
         
-        console.log(user_name);
-        throw 404;
-    
-        req.cache.hset('user', user_id, user_pw, (err, result) => {
+        req.cache.hexists('user', user_id, (err, result) => {
             if (err) throw err;
-            if (result == 0) 
-                return res.send({'result': 0});
+            if (result == 1) return res.send({'result': -1}); //동일한 아이디 이미 존재
 
-            req.cache.hmset('ID::' + user_id, 'name', user_name, 'email', user_email, (err, result) => {
+            let multi = req.cache.multi();
+            multi.hset('user', user_id, user_pw);
+            multi.hmset('ID::' + user_id, 'name', user_name, 'email', user_email);
+            multi.exec(function (err, results) {
                 if (err) throw err;
-                if (result == 0)
-                    return res.send({'result': -1});
 
                 return res.send({'result': 1});
             });
