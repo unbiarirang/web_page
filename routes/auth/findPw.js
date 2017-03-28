@@ -9,6 +9,12 @@ const
 
     NOT_EXIST_ID = '존재하지 않는 아이디';
 
+/**
+ * 큰일났다. 패스워드 찾기는 사용할 수 없다.
+ * 왜냐. bcrypt가 해싱을 한거지 encrypt를 한게 아니라 decrypt 자체를 할 수 없다.
+ * 사실 보안상으로도 패스워드를 보내주는 것보다 패스워드 리셋 메일을 보내는 것이 좋다.
+ * 일단 내비 두고 나중에 하자. TODO.
+ */
 function init(app) {
     app.get('/findPw', function (req, res) {
         res.render('auth/findPw');
@@ -72,8 +78,8 @@ function sendMail (email, pw, callback) {
         from: 'loveme <unbiarirang@naver.com>',
         to: email,
         subject: '너의 패스워드를 내가 찾아줄게',
-        //text: '실제 이케하면 안됨'
-        html: '<h1>실제 이케하면 안됨</h1><p>그래도 너의 패스워드는 ' + pw + '</p>'
+        //text: '텍스트'
+        html: '<h1>이거 비밀번호 해싱값이다 ㅋㅋ</h1><p>너의 패스워드는 ' + pw + '</p>'
     }
 
     smtpTransport.sendMail(mailOptions, function (err) {

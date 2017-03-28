@@ -18,7 +18,7 @@ function init(app) {
 
     /**
      * TODO.
-     * 클라이언트단에서 패스워드가 평문으로 오기 때문에
+     * 클라이언트단에서 서버로 패스워드가 평문으로 오기 때문에
      * 무조건 https로 바꿔줘야 한다.
      */
     app.post('/login', function (req, res) {
