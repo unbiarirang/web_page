@@ -19,6 +19,7 @@ module.exports = (app) => {
 		console.log('Redis error encountered : ', err);
 	});
 
+	// 멀티떄문에 주석쳤음. 멀티는 모니터 모드하면 안 됨.
 	// client.monitor((err, res) => {
 	// 	if (err) {
 	// 		console.err(err);

@@ -35,5 +35,5 @@ function init(app) {
             });
         });        
     });
-}
+} 
 exports.init = init;
