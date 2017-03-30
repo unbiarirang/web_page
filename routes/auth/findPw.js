@@ -68,7 +68,6 @@ function getPw (req, res, callback) {
 function sendMail (email, pw, callback) {
     let smtpTransport = nodemailer.createTransport(transport({  
         service: 'Gmail',
-        port: 25,
         auth: {
             user: 'ebchoi1030@gmail.com',
             pass: config.gmailPw
