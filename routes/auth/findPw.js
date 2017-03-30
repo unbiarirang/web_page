@@ -68,6 +68,7 @@ function getPw (req, res, callback) {
 function sendMail (email, pw, callback) {
     let smtpTransport = nodemailer.createTransport(transport({  
         service: 'Gmail',
+        port: 25,
         auth: {
             user: 'ebchoi1030@gmail.com',
             pass: config.gmailPw
@@ -75,7 +76,7 @@ function sendMail (email, pw, callback) {
     }));
 
     var mailOptions = {  
-        from: 'loveme <unbiarirang@naver.com>',
+        from: 'loveme <unbiarirang@naver.com>', 
         to: email,
         subject: '너의 패스워드를 내가 찾아줄게',
         //text: '텍스트'
