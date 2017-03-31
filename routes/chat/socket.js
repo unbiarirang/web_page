@@ -23,6 +23,10 @@ function init(http) {
 			}
 			else {                                      //기존 채팅방에 입장
 				let room = rooms[room_id];
+
+				if (room.userlist.indexOf(user_name) > -1) //중복 입장 안돼
+					return;
+
 				room.userlist.push(user_name);
 				userlist[user_name] = room_id;
 			}
@@ -40,6 +44,9 @@ function init(http) {
 		socket.on('disconnect', function () {
 			let user_name = socket.user_name;
 			let room_id = socket.room_id;
+
+			if (!rooms[room_id] || rooms[room_id].userlist.indexOf(user_name) < 0)
+				return;
 
 			delete userlist[user_name];                     //글로벌 유저 리스트에서 자신 삭제
 

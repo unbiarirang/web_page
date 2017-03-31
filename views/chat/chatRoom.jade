@@ -1,47 +1,44 @@
 title Socket.IO chat
-style.
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font: 13px Helvetica, Arial; }
-    form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-    form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-    form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-    #messages { list-style-type: none; margin: 0; padding: 0; }
-    #messages li { padding: 5px 10px; }
-    #messages li:nth-child(odd) { background: #eee; }
-    #back {top: 0; text-align: right}
+link(rel='stylesheet', href='/stylesheets/chatRoom.css')
+script(src='/socket.io/socket.io.js')
+script(src='http://code.jquery.com/jquery-1.11.1.js')
 
 input#back(type='button', value='back', action = '/')
 ul#messages
 form#name
-    input#m(autocomplete='off')
-    button Send
+	input#m(autocomplete='off')
+	button Send
 
-script(src='/socket.io/socket.io.js')
-script(src='http://code.jquery.com/jquery-1.11.1.js')
 script.
-    var room_id = !{room_id != null? JSON.stringify(room_id): 'null'};
-    var user_name = !{user_name != null? JSON.stringify(user_name): 'null'};
+	var room_id = !{room_id != null? JSON.stringify(room_id): 'null'};
+	var user_name = !{user_name != null? JSON.stringify(user_name): 'null'};
 
-    $(function() {
-        var socket = io();
-        var data = {};
+	$(function() {
+		var socket = io();
+		var data = {};
 
-        data.room_id = room_id;
-        data.user_name = user_name;
+		data.room_id = room_id;
+		data.user_name = user_name;
 
-        socket.emit('adduser', data);
+		socket.emit('adduser', data);
 
-        $('form').submit(function(){
-            socket.emit('chat', $('#m').val());
-            $('#m').val('');
-            return false;
-        });
+		$('form').submit(function(){
+			socket.emit('chat', $('#m').val());
+			$('#m').val('');
+			return false;
+		});
 
-        $('#back').on('click', () => {
-            window.location.href = '/chat';
-        })
+		$('#back').on('click', () => {
+			window.location.href = '/chat';
+		})
 
-        socket.on('chat', function (msg) {
-            $('#messages').append($('<li>').text(msg));
-        });
-    });
+		socket.on('chat', function (msg) {
+			$('#messages').append($('<li>').text(msg));
+		});
+
+		socket.on('heartBeat', function () {});
+
+		setInterval(function() {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
+			socket.emit('heartBeat');	//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
+		}, 30000);						//원하면 없에면됨.
+	});
