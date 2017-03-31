@@ -6,7 +6,7 @@ table {
 }
 
 
-th {
+th, tr {
     padding-left: 4px;
     padding-right: 4px;
     border-bottom: 1px solid navy;

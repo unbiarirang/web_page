@@ -1,34 +1,33 @@
-extends ../layout
+link(rel='stylesheet', href='/stylesheets/table.css')
+link(rel='stylesheet', href='/stylesheets/style.css')
+script(src='/javascripts/jquery.min.js')
+script.
+	$(function() {
+		if (!window.location.hash) { //요건 이 페이지 진입하면 바로 새로고침 한번
+			window.location = window.location + '#loaded';
+			window.location.reload();
+		}
 
-block content
-	link(rel='stylesheet', href='/stylesheets/table.css')
-	script(src='/javascripts/jquery.min.js')
-	script.
-		$(function() {
-			if (!window.location.hash) { //요건 이 페이지 진입하면 바로 새로고침 한번
-				window.location = window.location + '#loaded';
-				window.location.reload();
-			}
+		//window.setTimeout('location.reload()', 10000); //채팅방 리스트 페이지는 10초마다 갱신 
+	});
+	
+h1 welcome
+ul
+	li
+		a(href='/chat/' + 'new') 새로운 채팅방 만들기
+	li
+		a 기존 채팅방
 
-			window.setTimeout('location.reload()', 10000); //채팅방 리스트 페이지는 10초마다 갱신 
-		});
-		
-	h1 welcome
-	ul
-		li
-			a(href='/chat/' + 'new') 새로운 채팅방 만들기
-		li
-			a 기존 채팅방
-
-		table
+	table
+		tr
+			th(size='20') 채팅방 ID
+			th(size='20') 참여자 리스트
+		each val, key in rooms
 			tr
-				th(size='20') 채팅방 ID
-				th(size='20') 참여자 리스트
-			each val, key in rooms
-				tr
-					td
-						a(href='/chat/' + '#{key}') #{key} 
-					td #{rooms[key].userlist}
-		br
-		div
-			a.center(href='/menu') Back
+				td
+					a(href='/chat/' + '#{key}') #{key} 
+				td #{rooms[key].userlist}
+	br
+	div
+		a.center(href='/menu') Back
+block content

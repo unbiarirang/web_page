@@ -36,8 +36,6 @@ script.
 			$('#messages').append($('<li>').text(msg));
 		});
 
-		socket.on('heartBeat', function () {});
-
 		setInterval(function() {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
 			socket.emit('heartBeat');	//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
 		}, 30000);						//원하면 없에면됨.

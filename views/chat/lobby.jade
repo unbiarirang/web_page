@@ -1,0 +1,81 @@
+title Socket.IO chat
+link(rel='stylesheet', href='/stylesheets/chatRoom.css')
+link(rel='stylesheet', href='/stylesheets/table.css')
+link(rel='stylesheet', href='/stylesheets/style.css')
+script(src='/socket.io/socket.io.js')
+script(src='http://code.jquery.com/jquery-1.11.1.js')
+
+body
+	h1 welcome
+	ul
+		li
+			a(href='/chat/' + 'new') 새로운 채팅방 만들기
+		li
+			a 기존 채팅방
+
+		table#chat_list
+			tr
+				th(size='20') 채팅방 ID
+				th(size='20') 참여자 리스트
+			//- each val, key in rooms
+			//- 	tr
+			//- 		td
+			//- 			a(href='/chat/' + '#{key}') #{key} 
+			//- 		td #{rooms[key].userlist}
+		br
+		div
+			a.center(href='/menu') Back
+
+	input#back(type='button', value='back', action = '/')
+	ul#messages
+	form#name
+		input#m(autocomplete='off')
+		button Send
+
+script.
+	var user_name = !{user_name != null? JSON.stringify(user_name): 'null'};
+
+	$(function() {
+		var socket = io();
+		var data = {};
+
+		data.user_name = user_name;
+
+		socket.emit('lobby', data);
+
+		$('form').submit(function(){
+			console.log($('#m').val());
+			socket.emit('lobbyChat', $('#m').val());
+			$('#m').val('');
+			return false;
+		});
+
+		$('#back').on('click', () => {
+			window.location.href = '/menu';
+		})
+
+		socket.on('lobbyChat', function (msg) {
+			console.log('msg: ', msg);
+			$('#messages').append($('<li>').text(msg));
+		});
+
+		setInterval(function() {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
+			socket.emit('heartBeat');	//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
+		}, 30000);						//원하면 없에면됨.
+
+		setInterval(function() {
+			$.ajax({
+				url: '/chat',
+				type: 'POST',
+				success: function (resultData) {
+					console.log('result.rooms: ', resultData.rooms);
+					rooms = resultData.rooms;
+					$('#removable').remove();
+					for (let key in rooms) {
+						$('#chat_list').append($('<tr id="removable"><td><a href="/chat/' + key + '">' + key + '</td><td>' + rooms[key].userlist + '</td></tr>'));
+						//$('#chat_list').append($('<td>' + rooms[key].userlist + '</td></tr>'));
+					}
+				}
+			});
+		}, 5000);
+	});

@@ -18,9 +18,10 @@ function init(http) {
 			socket.broadcast.to('lobby').emit('chat', 'SERVER: ' + user_name + ' 님이 로비에 입장하셨습니당.');
 		});
 
-
-
-
+		socket.on('lobbyChat', function (msg) {
+			console.log('message from ' + socket.user_name + ': ' + msg);
+			io.sockets.in('lobby').emit('lobbyChat', socket.user_name + ': ' + msg);
+		});
 
 		socket.on('adduser', function (data) {
 			let user_name = data.user_name;
@@ -60,7 +61,11 @@ function init(http) {
 			let user_name = socket.user_name;
 			let room_id = socket.room_id;
 
-			if (!rooms[room_id] || rooms[room_id].userlist.indexOf(user_name) < 0)
+			if (userlist[user_name] == 'lobby') { //로비에서 나감
+				return delete userlist[user_name]; 
+			}
+
+			if (!rooms[room_id] || rooms[room_id].userlist.indexOf(user_name) < 0) //이미 삭제된 룸이거나 이미 삭제된 유저
 				return;
 
 			delete userlist[user_name];                     //글로벌 유저 리스트에서 자신 삭제

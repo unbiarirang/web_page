@@ -11,8 +11,12 @@ function init (app) {
 			sendData.user_name = req.session.userData.user_name;
 			sendData.rooms = rooms;
 			console.log('내정보 : ', req.session.userData);
-			res.render('chat/chat', sendData);
+			res.render('chat/lobby', sendData);
 		});
+	});
+
+	app.post('/chat', function (req, res) {
+		res.send({'rooms': rooms});
 	});
 
 	app.get('/chat/:room_id', function (req, res) {
@@ -26,6 +30,7 @@ function init (app) {
 			}
 
 			sendData.room_id = room_id;
+			sendData.rooms = rooms;
 			sendData.user_name = req.session.userData.user_name;
 
 			res.render('chat/chatRoom', sendData);
