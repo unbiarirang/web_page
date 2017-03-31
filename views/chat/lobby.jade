@@ -17,11 +17,6 @@ body
 			tr
 				th(size='20') 채팅방 ID
 				th(size='20') 참여자 리스트
-			//- each val, key in rooms
-			//- 	tr
-			//- 		td
-			//- 			a(href='/chat/' + '#{key}') #{key} 
-			//- 		td #{rooms[key].userlist}
 		br
 		div
 			a.center(href='/menu') Back
@@ -44,7 +39,6 @@ script.
 		socket.emit('lobby', data);
 
 		$('form').submit(function(){
-			console.log($('#m').val());
 			socket.emit('lobbyChat', $('#m').val());
 			$('#m').val('');
 			return false;
@@ -55,27 +49,25 @@ script.
 		})
 
 		socket.on('lobbyChat', function (msg) {
-			console.log('msg: ', msg);
 			$('#messages').append($('<li>').text(msg));
 		});
 
 		setInterval(function() {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
 			socket.emit('heartBeat');	//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
-		}, 30000);						//원하면 없에면됨.
+		}, 30000);						//원하면 없에면됨. 맞겠지?
 
-		setInterval(function() {
+		setInterval(function() {		//채팅방 리스트 다이나믹하게 초기화해줌^^
 			$.ajax({
 				url: '/chat',
 				type: 'POST',
 				success: function (resultData) {
-					console.log('result.rooms: ', resultData.rooms);
 					rooms = resultData.rooms;
 					$('#removable').remove();
 					for (let key in rooms) {
-						$('#chat_list').append($('<tr id="removable"><td><a href="/chat/' + key + '">' + key + '</td><td>' + rooms[key].userlist + '</td></tr>'));
-						//$('#chat_list').append($('<td>' + rooms[key].userlist + '</td></tr>'));
+						$('#chat_list').append($('<tr id="removable"><td><a href="/chat/' + key + '">'
+												 + key + '</td><td>' + rooms[key].userlist + '</td></tr>'));
 					}
 				}
 			});
-		}, 5000);
+		}, 10000);
 	});
