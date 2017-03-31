@@ -7,6 +7,21 @@ function init(http) {
 	let io = require('socket.io')(http);
 
 	io.on('connection', function (socket) {
+		socket.on('lobby', function (data) {
+			let user_name = data.user_name;
+			
+			socket.user_name = user_name;
+			userlist[user_name] = 'lobby';
+
+			console.log('userlist: ', userlist);
+			socket.join('lobby');
+			socket.broadcast.to('lobby').emit('chat', 'SERVER: ' + user_name + ' 님이 로비에 입장하셨습니당.');
+		});
+
+
+
+
+
 		socket.on('adduser', function (data) {
 			let user_name = data.user_name;
 			let room_id = data.room_id;
