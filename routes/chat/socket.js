@@ -15,7 +15,7 @@ function init(http) {
 
 			console.log('userlist: ', userlist);
 			socket.join('lobby');
-			socket.broadcast.to('lobby').emit('chat', 'SERVER: ' + user_name + ' 님이 로비에 입장하셨습니당.');
+			socket.broadcast.to('lobby').emit('lobbyChat', 'SERVER: ' + user_name + ' 님이 로비에 입장하셨습니당.');
 		});
 
 		socket.on('lobbyChat', function (msg) {
