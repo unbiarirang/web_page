@@ -3,11 +3,12 @@ link(rel='stylesheet', href='/stylesheets/chatRoom.css')
 script(src='/socket.io/socket.io.js')
 script(src='http://code.jquery.com/jquery-1.11.1.js')
 
-input#back(type='button', value='back', action = '/')
-ul#messages
-form#name
-	input#m(autocomplete='off')
-	button Send
+body
+	input#back(type='button', value='back', action = '/')
+	ul#messages
+	form#name
+		input#m(autocomplete='off')
+		button Send
 
 script.
 	var room_id = !{room_id != null? JSON.stringify(room_id): 'null'};

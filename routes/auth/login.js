@@ -41,18 +41,31 @@ function init(app) {
                 if (err) throw err;
                 if (!result) return res.render('auth/login', { error: 'Wrong Id or Password!' });
 
-                if (sessionMap.hasOwnProperty(input_id))
-                delete sessionMap[input_id];
+                let user_id = input_id;
+
+                //세션 설정
+                if (sessionMap.hasOwnProperty(user_id))
+                delete sessionMap[user_id];
 
                 let session_key = lib.getRandomNum();
-                sessionMap[input_id] = session_key;
+                sessionMap[user_id] = session_key;
 
                 console.log('sessionMap : ', sessionMap);
 
                 req.session.userData = {
-                    'user_id': input_id,
+                    'user_id': user_id,
                     'user_name': user_name,
                     'session_key': session_key
+                }
+
+                //쿠키 설정
+                if (!req.cookies || req.cookies.user_id != user_id) {   //쿠키가 없었거나 다른 아이디로 로그인했을 때 새로 만듬
+                    let option = {
+                        maxAge: 90 * 24 * 60 * 60 * 1000,               //90 일간 지속
+                        httpOnly: true                                  //웹서버에서만 접근 가능
+                    }
+                    res.cookie('cookie_id',lib.getRandomNum(), option);
+                    res.cookie('user_id', user_id, option); 
                 }
 
                 if (prev_path == '' || prev_path == 'undefined' || prev_path == null)

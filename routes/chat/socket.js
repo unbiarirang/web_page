@@ -39,10 +39,6 @@ function init(http) {
 			}
 			else {                                      //기존 채팅방에 입장
 				let room = rooms[room_id];
-
-				if (room.userlist.indexOf(user_name) > -1) //중복 입장 안돼
-					return;
-
 				room.userlist.push(user_name);
 				userlist[user_name] = room_id;
 			}
@@ -70,7 +66,7 @@ function init(http) {
 
 			delete userlist[user_name];                     //글로벌 유저 리스트에서 자신 삭제
 
-			if (rooms[room_id].userlist.length == 1)      	//혼자 있으니 채팅방 삭제
+			if (rooms[room_id].userlist.length == 1)      	//혼자 였으니 채팅방 삭제
 				delete rooms[room_id];
 			else {                                          //채팅방 유저 리스트에서 자신 삭제
 				let index = rooms[room_id].userlist.indexOf(user_name);
