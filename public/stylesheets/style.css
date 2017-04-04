@@ -75,3 +75,9 @@ a:link, a:visited, a:active, a:hover {
 	text-align: center;
 	color: navy;
 }
+
+.disabled {
+	pointer-events: none;
+	cursor: default;
+	opacity: 0.6;
+}

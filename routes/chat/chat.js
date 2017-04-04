@@ -9,7 +9,6 @@ function init (app) {
 		lib.checkLogin(req, res, () => {
 			let sendData = {};
 			sendData.user_name = req.session.userData.user_name;
-			sendData.rooms = rooms;
 			console.log('내정보 : ', req.session.userData);
 			res.render('chat/lobby', sendData);
 		});
@@ -23,9 +22,23 @@ function init (app) {
 		lib.checkLogin(req, res, () => {
 			let sendData = {};
 			let room_id = req.params.room_id;
+			let new_room_id;
 
-			if (room_id == 'new') {
-				room_id = lib.getRoomId();
+			if (room_id == 'match') {
+				for (let key in rooms) {
+					if (rooms[key].userlist.length < 2) {
+						new_room_id = key;
+						break;
+					}
+				}
+			}
+
+			if (room_id == 'new' || room_id == 'match') {
+				if (new_room_id)
+					room_id = new_room_id;
+				else
+					room_id = lib.getRoomId();
+
 				return res.redirect('/chat/' + room_id);
 			}
 

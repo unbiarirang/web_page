@@ -11,6 +11,8 @@ body
 		li
 			a(href='/chat/' + 'new') 새로운 채팅방 만들기
 		li
+			a(href='/chat/' + 'match') 대결하기
+		li
 			a 기존 채팅방
 
 		table#chat_list
@@ -21,7 +23,6 @@ body
 		div
 			a.center(href='/menu') Back
 
-	input#back(type='button', value='back', action = '/')
 	ul#messages
 	form#name
 		input#m(autocomplete='off')
@@ -52,22 +53,32 @@ script.
 			$('#messages').append($('<li>').text(msg));
 		});
 
-		setInterval(function() {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
-			socket.emit('heartBeat');	//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
-		}, 30000);						//원하면 없에면됨. 맞겠지?
+		//- setInterval(function () {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
+		//- 	socket.emit('heartBeat');	//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
+		//- }, 30000);						//원하면 없에면됨. 맞겠지?
 
-		setInterval(function() {		//채팅방 리스트 다이나믹하게 초기화해줌^^
-			$.ajax({
-				url: '/chat',
-				type: 'POST',
-				success: function (resultData) {
-					rooms = resultData.rooms;
-					$('#removable').remove();
-					for (let key in rooms) {
+		initList();
+		setInterval(initList, 20000);	//채팅방 리스트 다이나믹하게 초기화해줌^^
+	});
+
+	function initList() {
+		$.ajax({
+			url: '/chat',
+			type: 'POST',
+			success: function (resultData) {
+				rooms = resultData.rooms;
+				$('#removable').remove();
+
+				for (let key in rooms) {
+					if (rooms[key].userlist.length == 2) { //채팅방 인원 2명 꽉 참.
+						$('#chat_list').append($('<tr id="removable" class="disabled"><td><a href="/chat/' + key + '">'
+						+ key + '</td><td>' + rooms[key].userlist + '</td></tr>'));
+					}
+					else {
 						$('#chat_list').append($('<tr id="removable"><td><a href="/chat/' + key + '">'
-												 + key + '</td><td>' + rooms[key].userlist + '</td></tr>'));
+						+ key + '</td><td>' + rooms[key].userlist + '</td></tr>'));
 					}
 				}
-			});
-		}, 10000);
-	});
+			}
+		});
+	}

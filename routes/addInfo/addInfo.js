@@ -15,7 +15,7 @@ function init(app) {
             addInfo(req, res, (err) => {
                 if (err) throw err;
 
-                return res.render('addInfo', { success: 'Add Information Succeeded!' });
+                return res.render('addInfo/addInfo', { success: 'Add Information Succeeded!' });
             });
         });
     });
