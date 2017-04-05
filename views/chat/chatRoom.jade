@@ -37,7 +37,25 @@ script.
 			$('#messages').append($('<li>').text(msg));
 		});
 
+		socket.on('terminate', function (msg) { //상대방이 나가면 1분 뒤 자동 퇴장.
+			let count = 60;
+			$('#messages').append($('<li class="count">').text(msg));
+			setInterval(function () {
+				if (count == 1) {
+					socket.disconnect();
+					window.location.href = '/chat';
+				}
+
+				if (count <= 0) return;
+
+				count--;
+				$('.count').last().text('SERVER: ' + count + '초 후에 자동 퇴장됩니다.');
+			}, 1000);
+
+			socket.on('resume', function() { count = 0; }); //상대방 돌아옴. 다시 시작.
+		});
+
 		setInterval(function() {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
 			socket.emit('heartBeat');	//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
-		}, 30000);						//원하면 없에면됨.
+		}, 30000);						//원하면 없에면됨. 아마.
 	});

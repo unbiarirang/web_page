@@ -41,6 +41,7 @@ function init(http) {
 				let room = rooms[room_id];
 				room.userlist.push(user_name);
 				userlist[user_name] = room_id;
+				socket.broadcast.to(room_id).emit('resume');
 			}
 
 			console.log('rooms:', rooms, '\n userlist: ', userlist);
@@ -75,6 +76,7 @@ function init(http) {
 
 			console.log('rooms:', rooms, '\n userlist: ', userlist);
 			socket.broadcast.to(room_id).emit('chat', 'SERVER: ' + user_name + ' 님이 퇴장하셨습니당.');
+			socket.broadcast.to(room_id).emit('terminate', 'SERVER: 60초 후에 자동 퇴장됩니다.');
 		});
 	});
 }

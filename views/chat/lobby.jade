@@ -11,10 +11,8 @@ body
 		li
 			a(href='/chat/' + 'new') 새로운 채팅방 만들기
 		li
-			a(href='/chat/' + 'match') 대결하기
-		if last_room_id
-			li
-				a(href='/chat/#{last_room_id}') 이전 방으로 돌아가기 
+			a(href='/chat/' + 'match') 대결하기 
+		div#last_room
 		li
 			a 채팅방 리스트
 
@@ -57,10 +55,6 @@ script.
 			$('#messages').append($('<li>').text(msg));
 		});
 
-		//- setInterval(function () {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
-		//- 	socket.emit('heartBeat');	//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
-		//- }, 30000);						//원하면 없에면됨. 맞겠지? 안해도 안 끊어진다 ㄷㄷ
-
 		initList();
 		setInterval(initList, 20000);	//채팅방 리스트 다이나믹하게 초기화해줌^^
 	});
@@ -71,15 +65,20 @@ script.
 			type: 'POST',
 			success: function (resultData) {
 				rooms = resultData.rooms;
-				$('#removable').remove();
+				last_room_id = resultData.last_room_id;
+
+				$('.removable').remove();
+
+				if (last_room_id) //마지막 방번호가 있음
+					$('#last_room').append($('<li class="removable"><a href="/chat/' + last_room_id + '"> 이전 방으로 돌아가기</li>'));
 
 				for (let key in rooms) {
-					if (rooms[key].userlist.length == 2) { //채팅방 인원 2명 꽉 참.
-						$('#chat_list').append($('<tr id="removable" class="disabled"><td><a href="/chat/' + key + '">'
+					if (rooms[key].userlist.length == 2) { //채팅방 인원 2명 꽉 참
+						$('#chat_list').append($('<tr class="removable" class="disabled"><td><a href="/chat/' + key + '">'
 						+ key + '</td><td>' + rooms[key].userlist + '</td></tr>'));
 					}
 					else {
-						$('#chat_list').append($('<tr id="removable"><td><a href="/chat/' + key + '">'
+						$('#chat_list').append($('<tr class="removable"><td><a href="/chat/' + key + '">'
 						+ key + '</td><td>' + rooms[key].userlist + '</td></tr>'));
 					}
 				}

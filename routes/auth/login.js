@@ -60,8 +60,9 @@ function init(app) {
 
                 //쿠키 설정
                 if (!req.cookies || req.cookies.user_id != user_id) {   //쿠키가 없었거나 다른 아이디로 로그인했을 때 새로 만듬
+                    let cookie_duration_time = 90 * 24 * 60 * 60 * 1000; 
                     let option = {
-                        maxAge: 90 * 24 * 60 * 60 * 1000,               //90 일간 지속
+                        maxAge: cookie_duration_time,                   //쿠키 90일간 지속
                         httpOnly: true                                  //웹서버에서만 접근 가능
                     }
                     res.cookie('cookie_id',lib.getRandomNum(), option);

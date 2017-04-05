@@ -9,18 +9,20 @@ function init (app) {
 		lib.checkLogin(req, res, () => {
 			let sendData = {};
 			sendData.user_name = req.session.userData.user_name;
-			sendData.last_room_id = req.cookies.last_room_id;
 
 			console.log('내정보 : ', req.session.userData);
 			console.log('내 쿠키: ', req.cookies);
 
-			console.log('req.cookies.last_room_id: ', req.cookies.last_room_id);
 			res.render('chat/lobby', sendData);
 		});
 	});
 
 	app.post('/chat', function (req, res) {
-		res.send({'rooms': rooms});
+		let sendData = {};
+		sendData.rooms = rooms;
+		sendData.last_room_id = req.cookies.last_room_id;
+		
+		res.send(sendData);
 	});
 
 	app.get('/chat/:room_id', function (req, res) {
