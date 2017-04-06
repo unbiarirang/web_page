@@ -19,8 +19,10 @@ script.
 		STANDBY = 100,
 		READY = 200,
 		PLAY = 300,
-		FINISH = 400;
-	var my_turn = true;
+		FINISH = 400,
+		WAITING_TIME = 30000;
+
+	var my_turn = false;
 	var timer;
 	var room_id = !{room_id != null? JSON.stringify(room_id): 'null'};
 	var user_name = !{user_name != null? JSON.stringify(user_name): 'null'};
@@ -35,6 +37,7 @@ script.
 
 		socket.emit('addUser', data);
 
+		// 그냥 채팅 이벤트
 		//- $('form').submit(function () {
 		//- 	socket.emit('chat', $('#m').val());
 		//- 	$('#m').val('');
@@ -69,8 +72,6 @@ script.
 		});
 
 		socket.on('myTurn', function () {
-			var WAITING_TIME = 30000;
-
 			console.log('내차례임');
 			my_turn = true;
 			timer = setTimeout(function () {
