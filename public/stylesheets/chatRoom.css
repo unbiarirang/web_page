@@ -7,3 +7,6 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 #messages li { padding: 5px 10px; text-align: left}
 #messages li:nth-child(odd) { background: #eee; }
 #back {top: 0; text-align: right}
+.twoBtn { display: inline-block; width: 100%}
+.left { top: 0; float: left}
+.right {top: 0; float: right}

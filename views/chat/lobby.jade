@@ -30,6 +30,12 @@ body
 		button Send
 
 script.
+	const
+		STANDBY = 100,
+		READY = 200,
+		PLAY = 300,
+		FINISH = 400;
+
 	var user_name = !{user_name != null? JSON.stringify(user_name): 'null'};
 	var last_room_id = !{last_room_id != null? JSON.stringify(last_room_id): 'null'};
 
@@ -41,15 +47,11 @@ script.
 
 		socket.emit('lobby', data);
 
-		$('form').submit(function(){
+		$('form').submit(function () {
 			socket.emit('lobbyChat', $('#m').val());
 			$('#m').val('');
-			return false;
+			return;
 		});
-
-		//- $('#back').on('click', () => {
-		//- 	window.location.href = '/menu';
-		//- })
 
 		socket.on('lobbyChat', function (msg) {
 			$('#messages').append($('<li>').text(msg));
@@ -59,7 +61,7 @@ script.
 		setInterval(initList, 20000);	//채팅방 리스트 다이나믹하게 초기화해줌^^
 	});
 
-	function initList() {
+	function initList () {
 		$.ajax({
 			url: '/chat',
 			type: 'POST',
@@ -69,12 +71,12 @@ script.
 
 				$('.removable').remove();
 
-				if (last_room_id) //마지막 방번호가 있음
-					$('#last_room').append($('<li class="removable"><a href="/chat/' + last_room_id + '"> 이전 방으로 돌아가기</li>'));
+				if (last_room_id && rooms[last_room_id] && rooms[last_room_id].play_status == PLAY) //내 마지막 방번호가 있음. rooms에 그 방이 남아있음. 그 방이 게임 진행중임. (서버에서도 막음)
+					$('#last_room').append($('<li class="removable"><a href="/chat/' + last_room_id + '?isResume=true"> 이전 방으로 돌아가기</li>'));
 
 				for (let key in rooms) {
-					if (rooms[key].userlist.length == 2) { //채팅방 인원 2명 꽉 참
-						$('#chat_list').append($('<tr class="removable" class="disabled"><td><a href="/chat/' + key + '">'
+					if (rooms[key].userlist.length >= 2 || rooms[key].play_status >= PLAY) { //채팅방 인원 2명 꽉 참. 또는 게임이 진행중인 방
+						$('#chat_list').append($('<tr class="removable disabled"><td><a href="/chat/' + key + '">'
 						+ key + '</td><td>' + rooms[key].userlist + '</td></tr>'));
 					}
 					else {
