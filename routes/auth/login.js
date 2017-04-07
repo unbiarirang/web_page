@@ -4,9 +4,10 @@ const
     async = require('async'),
     bcrypt = require('bcrypt'),
 
-    lib = require('../../lib/lib');
+    lib = require('../../lib/lib'),
+    global = require('../../lib/global');
 
-let sessionMap = lib.getSessionMap();
+let sessionMap = global.getSessionMap();
 
 function init(app) {
     let prev_path;

@@ -45,12 +45,16 @@ script.
 
 		$('form').on('submit', function () {
 			if (my_turn) {
-				console.log('폼 제출');
 				var value = $('#m').val();
 				$('#m').val('');
 				controlPiece(value, () => {
 					socket.emit('chat', value);
-					socket.emit('yourTurn');
+
+					if (value == 'finish') //게임 종료 조건
+						socket.emit('finish');
+					else
+						socket.emit('yourTurn');
+
 					clearTimeout(timer);
 					my_turn = false;
 				});
@@ -69,12 +73,6 @@ script.
 		socket.on('chat', function (msg) {
 			$('#messages').append($('<li>').text(msg));
 		});
-
-		//- socket.on('set', function () {
-		//- 	setTimeout(function () {
-		//- 		socket.emit('myTurn');
-		//- 	}, WWAITING_TIME)
-		//- })
 
 		socket.on('myTurn', function () {
 			console.log('내차례임');
@@ -109,9 +107,13 @@ script.
 			socket.on('resume', function () { count = 0; }); //상대방 돌아옴. 다시 시작.
 		});
 
+		socket.on('finish', function() {
+			//승패 결과 처리
+		});
+
 		setInterval(function heartBeat () {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
-			socket.emit('heartBeat');	//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
-		}, 30000);						//원하면 없에면됨. 아마.
+			socket.emit('heartBeat');			//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
+		}, 30000);								//원하면 없에면됨. 아마.
 	});
 
 	function controlPiece (value, callback) {

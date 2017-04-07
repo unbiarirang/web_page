@@ -71,7 +71,7 @@ script.
 
 				$('.removable').remove();
 
-				if (last_room_id && rooms[last_room_id]) //내 마지막 방번호가 있음. rooms에 그 방이 남아있음.(서버에서도 막음)
+				if (last_room_id && rooms[last_room_id] && rooms[last_room_id].play_status < FINISH) //rooms에 그 방이 남아있음. 종료상태가 아님 (서버에서도 막음)
 					$('#last_room').append($('<li class="removable"><a href="/chat/' + last_room_id + '?isResume=true"> 이전 방으로 돌아가기</li>'));
 
 				for (let key in rooms) {
