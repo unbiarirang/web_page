@@ -50,7 +50,7 @@ script.
 		$('form').submit(function () {
 			socket.emit('lobbyChat', $('#m').val());
 			$('#m').val('');
-			return;
+			return false;
 		});
 
 		socket.on('lobbyChat', function (msg) {
