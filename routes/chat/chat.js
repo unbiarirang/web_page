@@ -1,13 +1,14 @@
 "use strict"
 const
-	lib = require('../../lib/lib');
+	lib = require('../../lib/lib'),
+	global = require('../../lib/global');
 const
 	STANDBY = 100, //TODO 모듈화
 	READY = 200,
 	PLAY = 300,
 	FINISH = 400;
 
-let rooms = require('./socket').rooms;
+let rooms = global.getRoomList();
 
 function init (app) {
 	app.get('/chat', function (req, res) {
@@ -16,7 +17,6 @@ function init (app) {
 			sendData.user_name = req.session.userData.user_name;
 
 			console.log('내정보 : ', req.session.userData);
-			console.log('내 쿠키: ', req.cookies);
 
 			res.render('chat/lobby', sendData);
 		});
@@ -52,23 +52,19 @@ function init (app) {
 					room_id = new_room_id;
 				else
 					room_id = lib.getRoomId();
-
+ 
 				return res.redirect('/chat/' + room_id);
 			}
 
 			let room = rooms[room_id];
 
-			// if (room && room.userlist.length >= 2) //방 인원 꽉 참 (클라서도 막음)
-			// 	return res.redirect('/chat?fail_reason=The room is full'); //TODO 관리자일 때는 입장 가능하게 해줘야함.
+			if (room && room.userlist.length >= 2 && (room.userlist.indexOf(user_name) < 0)) 	//튕긴방일때는 튕긴 사람만 들어갈 수 있다 (클라서도 막음)
+				return res.redirect('/chat?fail_reason=Game is ongoing');						//TODO 관리자일 때는 입장 가능하게 해줘야함.
 
-			if (room && room.play_status >= PLAY && req.cookies.last_room_id != room_id) //게임이 진행중인 방. 튕긴사람은 들어갈 수 있게 (클라서도 막음)
-				return res.redirect('/chat?fail_reason=Game is ongoing'); //TODO 관리자일 때는 입장 가능하게 해줘야함.
-
-			if (isResume && !rooms[room_id]) //'이전 방 들어가기' 누름. 하지만 방이 이미 사라져서 못들어감. (클라서도 막음)
+			if (isResume && !room) //'이전 방 들어가기' 누름. 하지만 방이 이미 사라져서 못들어감. (클라서도 막음)
 				return res.redirect('/chat?fail_reason=The room does not exist any more');
 
 			sendData.room_id = room_id;
-			sendData.rooms = rooms;
 			sendData.user_name = user_name;
 
 			res.cookie('last_room_id', room_id, { maxAge: 10 * 60 * 1000, httpOnly: true}); //last_room_id 10분간 쿠키에 저장

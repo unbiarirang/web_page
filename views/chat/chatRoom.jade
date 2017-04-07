@@ -26,7 +26,6 @@ script.
 	var timer;
 	var room_id = !{room_id != null? JSON.stringify(room_id): 'null'};
 	var user_name = !{user_name != null? JSON.stringify(user_name): 'null'};
-	var rooms = !{rooms != null? JSON.stringify(rooms): 'null'};
 
 	$(function() {
 		var socket = io();
@@ -71,6 +70,12 @@ script.
 			$('#messages').append($('<li>').text(msg));
 		});
 
+		//- socket.on('set', function () {
+		//- 	setTimeout(function () {
+		//- 		socket.emit('myTurn');
+		//- 	}, WWAITING_TIME)
+		//- })
+
 		socket.on('myTurn', function () {
 			console.log('내차례임');
 			my_turn = true;
@@ -81,24 +86,24 @@ script.
 			}, WAITING_TIME);	
 		});
 
-		socket.on('terminate', function (play_status) { //상대방이 나가면 1분 뒤 자동 퇴장.
+		socket.on('terminate', function () { //상대방이 나가면 1분 뒤 자동 퇴장.
 			var count = 60;
-			var words;
 
-			if (play_status == PLAY) words = '승리 처리됩니다.';
-			if (play_status == FINISH) words = '퇴장됩니다.';
-
-			$('#messages').append($('<li class="count">').text('SERVER: 60초 후에 자동으로 ' + words));
-			setInterval(function () {
+			$('#messages').append($('<li class="count">').text('SERVER: 60초 후에 자동으로 승리 및 퇴장합니다.'));
+			var tid = setInterval(function () {
 				if (count == 1) {
 					socket.disconnect();
 					window.location.href = '/chat';
 				}
 
-				if (count <= 0) return;
+				if (count <= 0) {
+					clearInterval(tid);
+					socket.emit('resume');
+					return;
+				}
 
 				count--;
-				$('.count').last().text('SERVER: ' + count + '초 후에 자동으로 ' + words);
+				$('.count').last().text('SERVER: ' + count + '초 후에 자동으로 승리 및 퇴장합니다.');
 			}, 1000);
 
 			socket.on('resume', function () { count = 0; }); //상대방 돌아옴. 다시 시작.
