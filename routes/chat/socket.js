@@ -161,16 +161,7 @@ function init(http) {
 
 			if ((userlist[room.userlist[0]] != room_id) && (userlist[room.userlist[1]] != room_id)) //둘다 나갔으니 채팅방 삭제
 				return delete rooms[room_id];
-			// else {                                          //채팅방 유저 리스트에서 자신 삭제
-			// 	let index = rooms[room_id].userlist.indexOf(user_name);
-			// 	rooms[room_id].userlist.splice(index, 1);
-				
-			// 	if (rooms[room_id].play_status < PLAY) {	//게임 도중에 나온게 아니라면 방 부분 초기화
-			// 		rooms[room_id].play_status = STANDBY;
-			// 		rooms[room_id].ready = '';
-			// 		rooms[room_id].turn = '';
-			// 	}
-			// }
+
 			console.log('rooms:', rooms, '\n userlist: ', userlist);
 			socket.broadcast.to(room_id).emit('chat', 'SERVER: ' + user_name + ' 님이 퇴장하셨습니당.');
  
