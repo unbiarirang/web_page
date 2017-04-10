@@ -63,18 +63,19 @@ script.
 
 	function initList () {
 		$.ajax({
-			url: '/chat',
+			url: '/chat/initList',
 			type: 'POST',
 			success: function (resultData) {
-				rooms = resultData.rooms;
-				last_room_id = resultData.last_room_id;
+				var rooms = resultData.rooms;
+				var last_room_id = resultData.last_room_id;
+				var room = rooms[last_room_id]; 
 
 				$('.removable').remove();
 
-				if (last_room_id && rooms[last_room_id] && rooms[last_room_id].play_status < FINISH) //rooms에 그 방이 남아있음. 종료상태가 아님 (서버에서도 막음)
+				if (last_room_id && room && room.play_status < FINISH && (room.userlist.indexOf(user_name) >= 0)) //rooms에 그 방이 남아있음. 방에 내이름이 있음. 종료상태가 아님 (서버에서도 막음)
 					$('#last_room').append($('<li class="removable"><a href="/chat/' + last_room_id + '?isResume=true"> 이전 방으로 돌아가기</li>'));
 
-				for (let key in rooms) {
+				for (var key in rooms) {
 					if (rooms[key].userlist.length >= 2) { //채팅방 인원 2명 꽉 참. (서버에서도 막음)
 						$('#chat_list').append($('<tr class="removable disabled"><td><a href="/chat/' + key + '">'
 						+ key + '</td><td>' + rooms[key].userlist + '</td></tr>'));

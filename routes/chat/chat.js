@@ -22,7 +22,7 @@ function init (app) {
 		});
 	});
 
-	app.post('/chat', function (req, res) {
+	app.post('/chat/initList', function (req, res) {
 		let sendData = {};
 		sendData.rooms = rooms;
 		sendData.last_room_id = req.cookies.last_room_id;
@@ -38,7 +38,7 @@ function init (app) {
 			let isResume = req.query.isResume;
 			let new_room_id;
 
-			if (room_id == 'match') { 
+			if (room_id == 'match') {
 				for (let key in rooms) {
 					if (rooms[key].userlist.length < 2 && rooms[key].play_status <= STANDBY) {
 						new_room_id = key;
