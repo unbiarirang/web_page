@@ -46,8 +46,10 @@ script.
 				controlPiece(value, () => {
 					socket.emit('chat', value);
 
-					if (value == 'finish') //게임 종료 조건
+					if (value == 'finish') { //게임 종료 조건
 						socket.emit('finish');
+						saveResult();
+					}
 					else
 						socket.emit('yourTurn');
 
@@ -103,8 +105,9 @@ script.
 			socket.on('resume', function () { count = 0; }); //상대방 돌아옴. 다시 시작.
 		});
 
-		socket.on('finish', function() {
-			//승패 결과 처리
+		socket.on('finish', function () {
+			//승패 결과 처리. ajax로 서버 가서 디비에 결과 저장.
+			var data = {};
 		});
 
 		setInterval(function heartBeat () {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
@@ -114,7 +117,7 @@ script.
 
 	function controlPiece (value, callback) {
 		$.ajax({
-			url: '/chat/' + room_id + '/control',
+			url: '/chat/' + room_id + '/controlPiece',
 			type: 'POST',
 			data: {
 				'value': value
@@ -126,3 +129,13 @@ script.
 			}
 		});
 	}
+
+	function saveResult (data) {
+		$.ajax({
+			url: '/chat/' + room_id + '/saveResult',
+			type: 'POST',
+			success: function (resultData) {
+				console.log('saveResult - resultData: ', resultData);
+			}
+		});
+	} 

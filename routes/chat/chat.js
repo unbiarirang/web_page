@@ -73,11 +73,27 @@ function init (app) {
 		});
 	});
 
-	app.post('/chat/:room_id/control', function (req, res) {
+	app.post('/chat/:room_id/controlPiece', function (req, res) {
 		let value = req.body.value;
 		console.log('value: ', value);
 
 		res.send({'resultData': 'ok'});
+	});
+
+	app.post('/chat/:room_id/saveResult', function (req, res) {
+		let room_id = req.params.room_id;
+		let room = rooms[room_id];
+
+		let winner = room.winner;
+		let loser = room.loser;
+
+		req.cache.hincrby('ID::' + winner, 'win_count', 1, (err, result) => {
+			if (err) throw err;
+
+			console.log('윈카운트 결과 ', result);
+
+			res.send({'resultData': 'ok'});
+		});
 	});
 }
 exports.init = init;

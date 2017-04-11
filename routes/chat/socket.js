@@ -43,7 +43,11 @@ function init(http) {
 					'play_status' : STANDBY,
 					'userlist' : [],
 					'ready': '',
-					'turn': ''
+					'turn': '',
+					'winner': '',
+					'looser': '',
+					'play_time': null,
+					'is_draw': false
 				}
 				room.userlist.push(user_name);
 				rooms[room_id] = room;
@@ -130,12 +134,14 @@ function init(http) {
 			socket.broadcast.to(room_id).emit('myTurn');
 		});
 
-		socket.on('finish', function() {
+		socket.on('finish', function () {
 			let room_id = socket.room_id;
 			let user_name = socket.user_name;
 			let room = rooms[room_id];
 
 			room.play_status = FINISH;
+			room.winner = user_name;
+			room.looser = room.userlist[0] == room.winner ? room.userlist[1] : room.userlist[0];
 
 			io.sockets.in(room_id).emit('chat', 'SERVER: ' + user_name + '님이 승리하였습니다.');
 			io.sockets.in(room_id).emit('finish');
