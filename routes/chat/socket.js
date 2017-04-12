@@ -48,7 +48,8 @@ function init(http) {
 					'turn': '',
 					'winner': '',
 					'loser': '',
-					'play_time': null,
+					'start_time': null,
+					'end_time': null,
 					'is_draw': false
 				}
 				room.userlist.push(user_id);
@@ -93,12 +94,13 @@ function init(http) {
 			console.log('rooms: ', rooms);
 
 			if (room.userlist.length == 1) return; 		//혼자 있을 때 레디
-			if (play_status >= PLAY) return;						//이미 플레이 중
+			if (play_status >= PLAY) return;			//이미 플레이 중
 			if (room.ready == data.user_id) return; 	//한사람이 레디 여러번함
 
 			if (play_status == READY) {
 				room.play_status = PLAY;
 				room.turn = room.ready;
+				room.start_time = Date.now();			//밀리초
 				io.sockets.in(room_id).emit('chat', 'SERVER: GAME START');
 
 				if (room.userlist[0] == user_id) {		//내가 방장 (방장 먼저 게임 시작)
@@ -142,11 +144,6 @@ function init(http) {
 		socket.on('finish', function () {
 			let room_id = socket.room_id;
 			let user_id = socket.user_id;
-			// let room = rooms[room_id];
-
-			// room.play_status = FINISH;
-			// room.winner = user_id;
-			// room.looser = room.userlist[0] == room.winner ? room.userlist[1] : room.userlist[0];
 
 			io.sockets.in(room_id).emit('chat', 'SERVER: ' + user_id + '님이 승리하였습니다.');
 			// io.sockets.in(room_id).emit('finish');
@@ -163,11 +160,11 @@ function init(http) {
 			if (!room || room.userlist.indexOf(user_id) < 0) //이미 삭제된 룸이거나 이미 삭제된 유저
 				return;
 
-			delete userlist[user_id];                     //글로벌 유저 리스트에서 자신 삭제
+			delete userlist[user_id];               //글로벌 유저 리스트에서 자신 삭제
 
 			console.log(room.userlist.length);
 
-			if (room.userlist.length == 1)      	//혼자 였으니 채팅방 삭제
+			if (room.userlist.length == 1)			//혼자 였으니 채팅방 삭제
 				return delete rooms[room_id];
 
 			if ((userlist[room.userlist[0]] != room_id) && (userlist[room.userlist[1]] != room_id)) //둘다 나갔으니 채팅방 삭제

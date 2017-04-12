@@ -90,8 +90,10 @@ script.
 			$('#messages').append($('<li class="count">').text('SERVER: 60초 후에 자동으로 승리 및 퇴장합니다.'));
 			var tid = setInterval(function () {
 				if (count == 1) {
-					socket.disconnect();
-					window.location.href = '/chat';
+					clearInterval(tid);
+					socket.emit('finish');
+					saveResult();
+					return;
 				}
 
 				if (count <= 0) {
@@ -101,7 +103,7 @@ script.
 				}
 
 				count--;
-				$('.count').last().text('SERVER: ' + count + '초 후에 자동으로 승리 및 퇴장합니다.');
+				$('.count').last().text('SERVER: ' + count + '초 후에 자동으로 승리합니다.');
 			}, 1000);
 
 			socket.on('resume', function () { count = 0; }); //상대방 돌아옴. 다시 시작.

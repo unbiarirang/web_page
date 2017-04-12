@@ -75,7 +75,7 @@ function init(app) {
 		res.send(sendData);
 	});
 
-	app.post('/chat/:room_id/controlPiece', function (req, res) {
+	app.post('/chat/:room_id/controlPiece', function (req, res) { //게임 로직
 		let value = req.body.value;
 		console.log('value: ', value);
 
@@ -91,6 +91,7 @@ function init(app) {
 		let loser = room.userlist[0] == user_id ? 1 : 0;
 
 		room.play_status = FINISH;
+		room.end_time = Date.now();
 		room.winner = winner;
 		room.loser = loser;
 
