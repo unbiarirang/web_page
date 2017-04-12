@@ -22,6 +22,7 @@ script.
 	var timer;
 	var room_id = !{room_id != null? JSON.stringify(room_id): 'null'};
 	var user_id = !{user_id != null? JSON.stringify(user_id): 'null'};
+	var user_uuid = !{user_uuid != null? JSON.stringify(user_uuid): 'null'};
 
 	$(function() {
 		var socket = io();
@@ -29,6 +30,7 @@ script.
 
 		data.room_id = room_id;
 		data.user_id = user_id;
+		data.user_uuid = user_uuid;
 
 		socket.emit('addUser', data);
 

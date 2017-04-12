@@ -33,6 +33,7 @@ function init(http) {
 
 		socket.on('addUser', function (data) {
 			let user_id = data.user_id;
+			let user_uuid = data.user_uuid;
 			let room_id = data.room_id;
 
 			socket.user_id = user_id;
@@ -40,24 +41,28 @@ function init(http) {
 
 			if (!rooms.hasOwnProperty(room_id)) {       //새로운방 생성
 				let room = {
-					'play_status' : STANDBY,
-					'userlist' : [],
+					'play_status': STANDBY,
+					'userlist': [],
+					'uuid_list': [],
 					'ready': '',
 					'turn': '',
 					'winner': '',
-					'looser': '',
+					'loser': '',
 					'play_time': null,
 					'is_draw': false
 				}
 				room.userlist.push(user_id);
+				room.uuid_list.push(user_uuid);
 				rooms[room_id] = room;
 				userlist[user_id] = room_id;
 			}
 			else {                                      //기존 채팅방에 입장
 				let room = rooms[room_id];
 
-				if (room.userlist.indexOf(user_id) < 0)
+				if (room.userlist.indexOf(user_id) < 0) {
 					room.userlist.push(user_id);
+					room.uuid_list.push(user_uuid);
+				}
 				userlist[user_id] = room_id;
 
 				socket.broadcast.to(room_id).emit('resume');

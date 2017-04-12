@@ -22,18 +22,11 @@ function init(app) {
 		});
 	});
 
-	app.post('/chat/initList', function (req, res) {
-		let sendData = {};
-		sendData.rooms = rooms;
-		sendData.last_room_id = req.cookies.last_room_id;
-
-		res.send(sendData);
-	});
-
 	app.get('/chat/:room_id', function (req, res) {
 		lib.checkLogin(req, res, () => {
 			let sendData = {};
 			let user_id = req.session.userData.user_id;
+			let user_uuid = req.session.userData.user_uuid;
 			let room_id = req.params.room_id;
 			let isResume = req.query.isResume;
 			let new_room_id;
@@ -66,11 +59,20 @@ function init(app) {
 
 			sendData.room_id = room_id;
 			sendData.user_id = user_id;
+			sendData.user_uuid = user_uuid;
 
 			res.cookie('last_room_id', room_id, { maxAge: 10 * 60 * 1000, httpOnly: true }); //last_room_id 10분간 쿠키에 저장
 
 			res.render('chat/chatRoom', sendData);
 		});
+	});
+
+	app.post('/chat/initList', function (req, res) {
+		let sendData = {};
+		sendData.rooms = rooms;
+		sendData.last_room_id = req.cookies.last_room_id;
+
+		res.send(sendData);
 	});
 
 	app.post('/chat/:room_id/controlPiece', function (req, res) {
@@ -85,27 +87,22 @@ function init(app) {
 		let user_id = req.body.user_id;
 		let room = rooms[room_id];
 
-		let winner = user_id;
-		let loser = room.userlist[0] == winner ? room.userlist[1] : room.userlist[0];
+		let winner = room.userlist[0] == user_id ? 0 : 1;
+		let loser = room.userlist[0] == user_id ? 1 : 0;
 
 		room.play_status = FINISH;
 		room.winner = winner;
 		room.loser = loser;
 
-		console.log('winner: ', winner, ' loser: ', loser);
-
 		let multi = req.cache.multi();
-		multi.hincrby('UUID::' + winner, 'win_count', 1);
-		multi.hincrby('UUID::' + loser, 'lose_count', 1);
-		//TODO 게임 결과는 sql에 저장하는게 좋을듯
-
-		multi.exec((err, results) => {
+		multi.hincrby('UUID::' + room.uuid_list[winner], 'win_count', 1);
+		multi.hincrby('UUID::' + room.uuid_list[loser], 'lose_count', 1);
+		multi.rpush('RESULT', JSON.stringify(room));
+		multi.exec(function (err, results) {
 			if (err) throw err;
-
-			console.log('윈카운트 결과 ', results);
 
 			res.send({ 'resultData': 'ok' });
 		});
 	});
 }
-exports.init = init;
+exports.init = init; 
