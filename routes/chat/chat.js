@@ -10,11 +10,11 @@ const
 
 let rooms = global.getRoomList();
 
-function init (app) {
+function init(app) {
 	app.get('/chat', function (req, res) {
 		lib.checkLogin(req, res, () => {
 			let sendData = {};
-			sendData.user_name = req.session.userData.user_name;
+			sendData.user_id = req.session.userData.user_id;
 
 			console.log('내정보 : ', req.session.userData);
 
@@ -33,7 +33,7 @@ function init (app) {
 	app.get('/chat/:room_id', function (req, res) {
 		lib.checkLogin(req, res, () => {
 			let sendData = {};
-			let user_name = req.session.userData.user_name;
+			let user_id = req.session.userData.user_id;
 			let room_id = req.params.room_id;
 			let isResume = req.query.isResume;
 			let new_room_id;
@@ -52,22 +52,22 @@ function init (app) {
 					room_id = new_room_id;
 				else
 					room_id = lib.getRoomId();
- 
+
 				return res.redirect('/chat/' + room_id);
 			}
 
 			let room = rooms[room_id];
 
-			if (room && room.userlist.length >= 2 && (room.userlist.indexOf(user_name) < 0)) 	//튕긴방일때는 튕긴 사람만 들어갈 수 있다 (클라서도 막음)
+			if (room && room.userlist.length >= 2 && (room.userlist.indexOf(user_id) < 0)) 	//튕긴방일때는 튕긴 사람만 들어갈 수 있다 (클라서도 막음)
 				return res.redirect('/chat?fail_reason=Game is ongoing');						//TODO 관리자일 때는 입장 가능하게 해줘야함.
 
 			if (isResume && !room) //'이전 방 들어가기' 누름. 하지만 방이 이미 사라져서 못들어감. (클라서도 막음)
 				return res.redirect('/chat?fail_reason=The room does not exist any more');
 
 			sendData.room_id = room_id;
-			sendData.user_name = user_name;
+			sendData.user_id = user_id;
 
-			res.cookie('last_room_id', room_id, { maxAge: 10 * 60 * 1000, httpOnly: true}); //last_room_id 10분간 쿠키에 저장
+			res.cookie('last_room_id', room_id, { maxAge: 10 * 60 * 1000, httpOnly: true }); //last_room_id 10분간 쿠키에 저장
 
 			res.render('chat/chatRoom', sendData);
 		});
@@ -77,22 +77,34 @@ function init (app) {
 		let value = req.body.value;
 		console.log('value: ', value);
 
-		res.send({'resultData': 'ok'});
+		res.send({ 'resultData': 'ok' });
 	});
 
 	app.post('/chat/:room_id/saveResult', function (req, res) {
 		let room_id = req.params.room_id;
+		let user_id = req.body.user_id;
 		let room = rooms[room_id];
 
-		let winner = room.winner;
-		let loser = room.loser;
+		let winner = user_id;
+		let loser = room.userlist[0] == winner ? room.userlist[1] : room.userlist[0];
 
-		req.cache.hincrby('ID::' + winner, 'win_count', 1, (err, result) => {
+		room.play_status = FINISH;
+		room.winner = winner;
+		room.loser = loser;
+
+		console.log('winner: ', winner, ' loser: ', loser);
+
+		let multi = req.cache.multi();
+		multi.hincrby('UUID::' + winner, 'win_count', 1);
+		multi.hincrby('UUID::' + loser, 'lose_count', 1);
+		//TODO 게임 결과는 sql에 저장하는게 좋을듯
+
+		multi.exec((err, results) => {
 			if (err) throw err;
 
-			console.log('윈카운트 결과 ', result);
+			console.log('윈카운트 결과 ', results);
 
-			res.send({'resultData': 'ok'});
+			res.send({ 'resultData': 'ok' });
 		});
 	});
 }

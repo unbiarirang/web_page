@@ -36,14 +36,14 @@ script.
 		PLAY = 300,
 		FINISH = 400;
 
-	var user_name = !{user_name != null? JSON.stringify(user_name): 'null'};
+	var user_id = !{user_id != null? JSON.stringify(user_id): 'null'};
 	var last_room_id = !{last_room_id != null? JSON.stringify(last_room_id): 'null'};
 
 	$(function() {
 		var socket = io();
 		var data = {};
 
-		data.user_name = user_name;
+		data.user_id = user_id;
 
 		socket.emit('lobby', data);
 
@@ -72,7 +72,7 @@ script.
 
 				$('.removable').remove();
 
-				if (last_room_id && room && room.play_status < FINISH && (room.userlist.indexOf(user_name) >= 0)) //rooms에 그 방이 남아있음. 방에 내이름이 있음. 종료상태가 아님 (서버에서도 막음)
+				if (last_room_id && room && room.play_status < FINISH && (room.userlist.indexOf(user_id) >= 0)) //rooms에 그 방이 남아있음. 방에 내이름이 있음. 종료상태가 아님 (서버에서도 막음)
 					$('#last_room').append($('<li class="removable"><a href="/chat/' + last_room_id + '?isResume=true"> 이전 방으로 돌아가기</li>'));
 
 				for (var key in rooms) {

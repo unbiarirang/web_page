@@ -6,23 +6,21 @@ block content
 		$(function() {
 			$('#btnCreate').on('click', function () {	
 				var user_id = $('#user_id').val();
-				var user_name = $('#user_name').val();
 				var user_email = $('#user_email').val();
 				var user_pw = $('#user_pw').val();
 				var user_pw_confirm = $('#user_pw_confirm').val();
 
-				if (!validate(user_id, user_name, user_email, user_pw, user_pw_confirm)) return;
+				if (!validate(user_id, user_email, user_pw, user_pw_confirm)) return;
 				$.ajax({
 					url: '/signUp',
 					type: 'POST',
 					data: {
 						'user_id': user_id,
-						'user_name': user_name,
 						'user_email': user_email,
 						'user_pw': user_pw
 					},
-					success: function(resultData) {
-						if (resultData.result == -1) 
+					success: function (resultData) {
+						if (resultData.result == 'invalidId') 
 							return alert('같은 아이디가 이미 존재합니다. 가입이 실패했습니다.');
 						if (resultData.result != 1)
 							return alert('가입이 실패했습니다.');
@@ -34,14 +32,9 @@ block content
 			});
 		});
 
-		function validate (id, name, email, pw, pw_confirm) { //그냥 jade단에서 form으로 검사하면 훨 쉬움 ㄷㄷ
+		function validate (id, email, pw, pw_confirm) { //그냥 jade단에서 form으로 검사하면 훨 쉬움 ㄷㄷ
 			if (!id) {
 				alert('아이디를 입력해 주세요');
-				return false;
-			}
-
-			if (!name) {
-				alert('이름을 입력해 주세요');
 				return false;
 			}
 
@@ -84,10 +77,6 @@ block content
 				td Id
 				td
 					input#user_id(type='text' size='20')
-			tr
-				td Name
-				td
-					input#user_name(type='text' size='20')
 			tr
 				td Email
 				td

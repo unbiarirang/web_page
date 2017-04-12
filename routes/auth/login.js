@@ -26,23 +26,24 @@ function init(app) {
         let input_id = req.body.input_id;
         let input_pw = req.body.input_pw;
 
-        let multi = req.cache.multi();
-
-        multi.hget('user', input_id);
-        multi.hget('ID::' + input_id, 'name');
-        multi.exec(function (err, results) {
+        req.cache.hget('USER', input_id, (err, result) => {
             if (err) throw err;
 
-            let hash = results[0];
-            let user_name = results[1];
+            let user_uuid = result;
+            if (!user_uuid) return res.render('auth/login', { error: 'Wrong Id or Password!' });
 
-            if (!hash || !user_name) return res.render('auth/login', { error: 'Wrong Id or Password!' });
+            let multi = req.cache.multi();
+            multi.hget('UUID::' + user_uuid, 'password');
+            multi.hget('UUID::' + user_uuid, 'id');
+            multi.exec(function (err, results) {
+                if (err) throw err;
 
-            bcrypt.compare(input_pw, hash, function (err, result) {
+                let password = results[0];
+                let user_id = results[1];
+
+                bcrypt.compare(input_pw, password, function (err, result) {
                 if (err) throw err;
                 if (!result) return res.render('auth/login', { error: 'Wrong Id or Password!' });
-
-                let user_id = input_id;
 
                 //세션 설정
                 if (sessionMap.hasOwnProperty(user_id))
@@ -55,7 +56,7 @@ function init(app) {
 
                 req.session.userData = {
                     'user_id': user_id,
-                    'user_name': user_name,
+                    'user_uuid': user_uuid,
                     'session_key': session_key
                 }
 
@@ -74,8 +75,9 @@ function init(app) {
                     res.redirect('/menu');
                 else
                     res.redirect(prev_path);
+                });
             });
-        }); 
+        });
     });
 }
 exports.init = init;

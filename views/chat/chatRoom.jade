@@ -21,14 +21,14 @@ script.
 	var my_turn = false;
 	var timer;
 	var room_id = !{room_id != null? JSON.stringify(room_id): 'null'};
-	var user_name = !{user_name != null? JSON.stringify(user_name): 'null'};
+	var user_id = !{user_id != null? JSON.stringify(user_id): 'null'};
 
 	$(function() {
 		var socket = io();
 		var data = {};
 
 		data.room_id = room_id;
-		data.user_name = user_name;
+		data.user_id = user_id;
 
 		socket.emit('addUser', data);
 
@@ -105,11 +105,6 @@ script.
 			socket.on('resume', function () { count = 0; }); //상대방 돌아옴. 다시 시작.
 		});
 
-		socket.on('finish', function () {
-			//승패 결과 처리. ajax로 서버 가서 디비에 결과 저장.
-			var data = {};
-		});
-
 		setInterval(function heartBeat () {		//이게 클라이언트에서 일정 시간 반응이 없으면 소켓 연결이 
 			socket.emit('heartBeat');			//끊어지기 때문에 허트비트를 해놧음. 만약 자동으로 끊어지길
 		}, 30000);								//원하면 없에면됨. 아마.
@@ -134,6 +129,9 @@ script.
 		$.ajax({
 			url: '/chat/' + room_id + '/saveResult',
 			type: 'POST',
+			data: {
+				'user_id': user_id
+			},
 			success: function (resultData) {
 				console.log('saveResult - resultData: ', resultData);
 			}

@@ -50,18 +50,27 @@ exports.init = init;
 
 function getEmail (req, res, callback) {
     let user_id = req.body.user_id;
-    
-    req.cache.hget('ID::' + user_id, 'email', (err, result) => {
-        if (!err && !result) err = NOT_EXIST_ID;
 
-        callback(err, result);
+    req.cache.hget('USER', user_id, (err, result) => {
+        if (err) return callback(err);
+        if (!err && !result) { err = NOT_EXIST_ID; return callback(err);}
+
+        let user_uuid = result;
+        req.body.user_uuid = user_uuid;
+
+        req.cache.hget('UUID::' + user_uuid, 'email', (err, result) => {
+            callback(err, result);
+        }); 
     });
 }
 
 function getPw (req, res, callback) {
     let user_id = req.body.user_id;
+    let user_uuid = req.body.user_uuid;
 
-    req.cache.hget('user', user_id, (err, result) => {
+    console.log('user_uuid: ', user_uuid);
+
+    req.cache.hget('UUID::' + user_uuid, 'password', (err, result) => {
         callback(err, result);
     });
 }
