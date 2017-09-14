@@ -4,7 +4,7 @@ const
     path = require('path'),
     lib = require('../lib/lib');
 
-    exec = require('child_process').execFile;
+var exec = require('child_process').execFile;
 
 function init(app) {
     app.get('/', function (req, res) {
