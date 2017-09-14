@@ -4,6 +4,8 @@ const
     path = require('path'),
     lib = require('../lib/lib');
 
+    exec = require('child_process').execFile;
+
 function init(app) {
     app.get('/', function (req, res) {
         res.render('index');
@@ -18,6 +20,16 @@ function init(app) {
     app.get('/profile', function (req, res) {
         lib.checkLogin(req, res, () => {
             res.sendFile(path.join(__dirname, '..', 'public/profile.html'));
+        });
+    });
+
+    app.get('/gwent', function (req, res) {
+        lib.checkLogin(req, res, () => {
+            console.log("gwent exe start");
+                exec('../gwent/gwent/bin/gwent.exe', function(err, data) {  
+                    console.log(err)
+                    console.log(data.toString());                       
+            });  
         });
     });
 
